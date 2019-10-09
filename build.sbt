@@ -1,5 +1,5 @@
-name := """src"""
-organization := "htwg.de.htwg.wt"
+name := "de.htwg.wt.durak"
+organization := "de.htwg.wt"
 
 version := "1.0-SNAPSHOT"
 
