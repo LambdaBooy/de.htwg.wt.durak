@@ -3,7 +3,8 @@ organization := "de.htwg.wt"
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file(".")).enablePlugins(PlayScala).aggregate(myLib).dependsOn(myLib)
+lazy val myLib = project
 
 scalaVersion := "2.12.7"
 

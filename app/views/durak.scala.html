@@ -1,0 +1,85 @@
+@import de.htwg.se.durak.controller.controllerComponent.GameStatus
+@(controller: de.htwg.se.durak.controller.controllerComponent.ControllerInterface)
+
+    @numberOfPlayers = @{
+        controller.players.size
+    }
+
+    @gameStatus = @{
+        controller.gameStatus
+    }
+
+    @activePlayer = @{
+        controller.activePlayerToString
+    }
+
+    @trumpCard = @{
+        controller.trumpCardToString
+    }
+
+    @attacker = @{
+        controller.currentAttackerToString
+    }
+
+    @defender = @{
+        controller.currentVictimToString
+    }
+
+    @neighbor = @{
+        controller.currentNeighbourToString
+    }
+
+    @attackCards = @{
+        controller.currentAttackCardsToString
+    }
+
+    @blockedCards = @{
+        controller.getCurrentBlockedByMap
+    }
+
+    @handCards = @{
+        controller.activePlayerHandCardsToString
+    }
+
+    @winners = @{
+        controller.winnersToString
+    }
+
+    @main("HTWG Durak") {
+        @if(numberOfPlayers < 2) {
+            <p>
+                You have to add at least
+                <b>2</b>
+                players before you can play!
+            </p>
+        } else if(numberOfPlayers >= 2 && (gameStatus == GameStatus.IDLE || gameStatus == GameStatus.NEWPLAYER)) {
+        <p>
+            You have to
+            <b>start</b>
+            a game before you can play!
+        </p>
+        } else {
+        <div class="gameContainer">
+            <div class="game">
+                <p>@GameStatus.message(gameStatus)</p>
+                <p>
+                    =============================================<br>
+                    Trump Card: @trumpCard
+                </p>
+                <p>
+                    <b>'@activePlayer'</b> turn:<br>
+                    Attacker: '@attacker'<br>
+                    Defender: '@defender'<br>
+                    Neighbor: '@neighbor'<br>
+                </p>
+                <p>
+                    Cards to block: @attackCards<br>
+                    Blocked cards: @blockedCards<br>
+                    Cards on hand: @handCards<br>
+                    Winners: @winners<br>
+                    =============================================<br>
+                </p>
+            </div>
+        </div>
+        }
+    }

@@ -1,5 +1,98 @@
 @()
 
-@main("Welcome to Play") {
-  <h1>About Durak</h1>
+@main("HTWG Durak") {
+  <h1>Über Durak</h1>
+
+  <p>
+    Durak ist ein russisches Kartenspiel. Ziel des Spiels ist es, nach aufgebrauchtem Deck möglichst schnell alle Karten
+    loszuwerden. Als Durak („Dummkopf“) wird derjenige Spieler bezeichnet, der als letzter Karten auf der Hand hat.
+    Derjenige, der zuerst keine Karten mehr hat, gewinnt. Die Runde wird jedoch fortgesetzt mit den restlichen Spielern,
+    die um den zweiten, dritten und vierten Platz spielen.
+  </p>
+
+  <h2>Vorbereitung:</h2>
+
+  <p>
+    Anzahl Karten im Deck:&emsp;&emsp;&emsp;52<br>
+    Maximale Anzahl Spieler:&emsp;&emsp;10<br>
+    Zu beginn erhält jeder Spieler 5 Handkarten.
+  </p>
+
+  <h2>Karten:</h2>
+
+  <p>
+    Die Spielkarten, geordnet von der niedrigsten Wertigkeit zur höchsten Wertigkeit:
+  </p>
+
+  <p>
+    &emsp;&emsp;&emsp;&emsp;<b>2, 3, 4, 5, 6, 7, 8, 9, Bube, Dame, König, 10, Ass</b>
+  </p>
+
+  <h2>Trumpfkarte:</h2>
+
+  <p>
+    Zu Beginn des Spiels wird eine Trumpfkarte festgelegt (die letzte Karte des Stapels). Die Farbe dieser Karte legt die
+    Trumpffarbe fest, d.h. alle Karten mit dieser Farbe sind nun Trupfkarten. Die soebenen festgelegte Trumpfkarte ist für
+    alle Spielteilnehmer sichtbar und kann auch aufgezogen werden.
+  </p>
+  <p>
+    Eine Trumpfkarte kann jede "normale" Karte decken.
+    Eine Trumpfkarte kann mit einer anderen Trumpfkarte mit höherer Wertigkeit gedeckt werden.
+  </p>
+
+  <h2>Angriff:</h2>
+
+  <p>
+    Ein Angreifer darf beliebig viele Karten der gleichen Wertigkeit legen um den Verteidiger anzugreifen, solange dieser
+    genügend Karten auf der Hand hat um den Angriff abzuwehren.
+  </p>
+
+  <h2>Verteidigen:</h2>
+
+  <p>
+    Ein Verteidiger muss alle ungedeckten Karten auf dem Spielfeld decken und zwar solange bis beide Nachbarn zufreiden
+    sind und nichts mehr dazuwerfen möchten.
+    Eine auf dem Spielfeld liegende Karte kann nur mit der selben Farbe und einer höheren Wertigkeit gedeckt werden.
+    Trumpfkarten sind hiervon ausgenommen.
+  </p>
+  <p>
+    Ein Verteidiger hat auch die Möglichkeit einen Angriff weiter zu schieben, indem er eine Karte einer anderen Farbe
+    der selben Wertigkeit wie die auf dem Spielfeld liegenden Karten dazu wirft.
+    Dadurch greift nun der ursprüngliche Verteidiger den Spieler zu seiner linken an. Dies ist jedoch nur möglich,
+    solange der Verteidiger noch keine der Angriffskarten gedeckt hat und der Spieler zu seiner linken noch genügend
+    Handkarten besitzt, um den Angriff abzuwehren.
+  </p>
+
+  <h2>Spielverlauf:</h2>
+
+  <p>
+    Ein zufällig ausgewählter Spieler darf beginnen.
+  </p>
+  <p>
+    Es wird rundenweiße im Uhrzeigersinn gespielt. Eine Runde beginnt mit dem Angriff des Angreifers, welcher den Spieler
+    zu seiner linken (den Verteidiger) angreifen darf. Der Verteidiger muss nun die vom Angreifer gelegten Karten decken
+    ("abwehren").
+  </p>
+  <p>
+    Gelingt es dem Verteidiger den Angriff abzuwehren, dürfen beide Nachbarn des Verteidigers weitere Karten dazu werfen.
+    Es können jedoch nur Karten dazugeworfen werden, welche die selbe Wertigkeit bistzen, wie einer der bereits auf dem
+    Spielfeld liegenden Karten. Die dazugeworfenen Karten muss der Verteidiger nun ebenfalls decken, wodurch der Zyklus
+    wieder von vorne beginnt. Dies wird solange wiederholt, bis beide Nachbarn des Verteidigers zufrieden sind, also
+    keine Karten mehr dazu werfen möchten.
+  </p>
+  <p>
+    Schafft es der Verteidiger nicht, den Angriff erfolgreich abzuwehren, so muss dieser alle Karten die beim Angriff
+    gelegt wurden aufnehmen. Danach ist der Spieler zu seiner linken an der Reihe anzugreifen.
+  </p>
+  <p>
+    Sobald ein Spieler einen Zug an einen anderen Spieler übergibt, muss dieser so viele Karten vom Stapel aufziehen, bis
+    er wieder 5 Karten auf der Hand hat.
+  </p>
+  <p>
+    Der Spieler, welcher als erstes keine Handkarten mehr besitzt, gewinnt das Spiel.
+  </p>
+  <p>
+    Das Spiel wird solange weitergespielt, bis es nur noch einen Spieler gibt, der als einziger noch Handkarten besitzt.
+    Derjenige ist dann der Verlierer.
+  </p>
 }

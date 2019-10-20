@@ -8,5 +8,17 @@ GET     /                           controllers.DurakController.durak
 
 GET     /about                      controllers.DurakController.about
 
+GET     /addPlayer/:name            controllers.DurakController.addPlayer(name: String)
+
+GET     /newGame                    controllers.DurakController.newGame
+
+GET     /play/:input                controllers.DurakController.playCard(input: String)
+
+GET     /ok                         controllers.DurakController.ok
+
+GET     /take                       controllers.DurakController.take
+
+GET     /exit                       controllers.DurakController.exit
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
