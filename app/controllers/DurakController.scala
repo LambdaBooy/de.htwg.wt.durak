@@ -4,6 +4,7 @@ package controllers
 import de.htwg.se.durak.Durak
 import de.htwg.se.durak.controller.controllerComponent.{ControllerInterface, GameStatus}
 import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
+import de.htwg.se.durak.util.cardConverter.CardImgConverter.{getCardColorPath, getCardValuePath}
 import de.htwg.se.durak.util.cardConverter.CardStringConverter
 import de.htwg.se.durak.util.customExceptions.IllegalTurnException
 import javax.inject._

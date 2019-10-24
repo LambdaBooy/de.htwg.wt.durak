@@ -1,0 +1,101 @@
+div.scrollmenu {
+    background-color: green;
+    overflow: auto;
+    white-space: nowrap;
+    bottom: 0;
+}
+
+div.scrollmenu a {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+}
+
+div.scrollmenu a:hover {
+    background-color: #777;
+}
+
+#card {
+    width: 100px;
+    margin: 10px;
+}
+
+#attackCards {
+    margin-left: 10%;
+    width: 78%;
+}
+
+#secondScrollContainer {
+    width: 77%;
+    margin-top: 30px;
+    margin-left: 10.8%;
+}
+
+#blockedCards {
+    display: inline-block;
+}
+
+#blockingCards {
+    /*position: absolute;*/
+    /*bottom: -50px;*/
+    margin-top: -125px;
+}
+
+#handCardsView {
+    position: fixed;
+    bottom: 15px;
+    width: 200%;
+}
+
+#trumpCardBox {
+    text-align: right;
+    margin-right: 21px;
+}
+
+#okayButton {
+    margin-left: 35px;
+    margin-top: 25px;
+    font-size: large;
+}
+
+#undoButton {
+    margin-left: 35px;
+    margin-top: 30px;
+    font-size: large;
+}
+
+#buttonRight {
+    margin-top: 85px;
+    font-size: large;
+}
+
+#deckInfo {
+    text-align: center;
+    color: white;
+    font-size: large;
+    padding-top: 15px;
+    margin-bottom: 0;
+}
+
+#gameInfo {
+    position: fixed;
+    left: 15px;
+    text-align: left;
+    color: white;
+    font-size: large;
+}
+
+#trumpCardLabel {
+    text-align: right;
+    color: white;
+    font-size: large;
+    padding-right: 32px;
+    padding-top: 15px;
+    margin-bottom: 0;
+}
+
+body {
+    background-color: green;
+}

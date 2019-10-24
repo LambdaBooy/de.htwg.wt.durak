@@ -1,85 +1,231 @@
-@import de.htwg.se.durak.controller.controllerComponent.GameStatus
+@import de.htwg.se.durak.util.cardConverter._
+@import de.htwg.se.durak.model.cardComponent.CardInterface
 @(controller: de.htwg.se.durak.controller.controllerComponent.ControllerInterface)
 
-    @numberOfPlayers = @{
-        controller.players.size
+@numberOfPlayers = @{
+    controller.players.size
+}
+
+@gameStatus = @{
+    controller.gameStatus
+}
+
+@deckSize = @{
+    controller.deckSizeToString
+}
+
+@activePlayer = @{
+    controller.activePlayerToString
+}
+
+@trumpCard = @{
+    val trumpCardAsString = controller.trumpCardToString
+    val trumpCardArray: Array[String] = trumpCardAsString.split(",")
+    var trumpCard: Array[CardInterface] = Array.empty
+
+    CardStringConverter.parseCardStringToCardObject(trumpCardAsString)
+
+}
+
+@attacker = @{
+    controller.currentAttackerToString
+}
+
+@defender = @{
+    controller.currentVictimToString
+}
+
+@neighbor = @{
+    controller.currentNeighbourToString
+}
+
+@attackCards = @{
+    val attackCardsAsString = controller.currentAttackCardsToString
+    val attackCardsArray: Array[String] = attackCardsAsString.split(",")
+    var attackCards: Array[CardInterface] = Array.empty
+
+    attackCardsArray.foreach(cardString => {
+        if(!(cardString == "")) {
+            val card = CardStringConverter.parseCardStringToCardObject(cardString.trim)
+            attackCards = attackCards :+ card
+        }
+    })
+
+    attackCards
+}
+
+@blockCards = @{
+    var blockCards: Array[CardInterface] = Array.empty
+
+    for((blockCard, blockingCard) <- controller.getCurrentBlockedByMap) {
+        blockCards = blockCards :+ blockCard
     }
 
-    @gameStatus = @{
-        controller.gameStatus
+    blockCards
+}
+
+@blockingCards = @{
+    var blockingCards: Array[CardInterface] = Array.empty
+
+    for((blockCard, blockingCard) <- controller.getCurrentBlockedByMap) {
+        blockingCards = blockingCards :+ blockingCard
     }
 
-    @activePlayer = @{
-        controller.activePlayerToString
-    }
+    blockingCards
 
-    @trumpCard = @{
-        controller.trumpCardToString
-    }
+}
 
-    @attacker = @{
-        controller.currentAttackerToString
-    }
+@handCards = @{
+    val handCardsAsString = controller.activePlayerHandCardsToString
+    val handCardsArray: Array[String] = handCardsAsString.split(",")
+    var handCards: Array[CardInterface] = Array.empty
 
-    @defender = @{
-        controller.currentVictimToString
-    }
+    handCardsArray.foreach(cardString => {
+        if(!(cardString == "")) {
+            val card = CardStringConverter.parseCardStringToCardObject(cardString)
+            handCards = handCards :+ card
+        }
+    })
 
-    @neighbor = @{
-        controller.currentNeighbourToString
-    }
+    handCards
+}
 
-    @attackCards = @{
-        controller.currentAttackCardsToString
-    }
+@winners = @{
+    controller.winnersToString
+}
 
-    @blockedCards = @{
-        controller.getCurrentBlockedByMap
-    }
 
-    @handCards = @{
-        controller.activePlayerHandCardsToString
-    }
-
-    @winners = @{
-        controller.winnersToString
-    }
-
-    @main("HTWG Durak") {
-        @if(numberOfPlayers < 2) {
-            <p>
-                You have to add at least
-                <b>2</b>
-                players before you can play!
-            </p>
-        } else if(numberOfPlayers >= 2 && (gameStatus == GameStatus.IDLE || gameStatus == GameStatus.NEWPLAYER)) {
-        <p>
-            You have to
-            <b>start</b>
-            a game before you can play!
-        </p>
-        } else {
-        <div class="gameContainer">
-            <div class="game">
-                <p>@GameStatus.message(gameStatus)</p>
-                <p>
-                    =============================================<br>
-                    Trump Card: @trumpCard
-                </p>
-                <p>
-                    <b>'@activePlayer'</b> turn:<br>
-                    Attacker: '@attacker'<br>
-                    Defender: '@defender'<br>
-                    Neighbor: '@neighbor'<br>
-                </p>
-                <p>
-                    Cards to block: @attackCards<br>
-                    Blocked cards: @blockedCards<br>
-                    Cards on hand: @handCards<br>
-                    Winners: @winners<br>
-                    =============================================<br>
-                </p>
+@main("HTWG Durak") {
+    @* @if(numberOfPlayers < 2) {*@
+    @* <p>*@
+    @* You have to add at least*@
+    @* <b>2</b>*@
+    @* players before you can play!*@
+    @* </p>*@
+    @* } else if(numberOfPlayers >= 2 && (gameStatus == GameStatus.IDLE || gameStatus == GameStatus.NEWPLAYER)) {*@
+    @* <p>*@
+    @* You have to*@
+    @* <b>start</b>*@
+    @* a game before you can play!*@
+    @* </p>*@
+    @* } else {*@
+    @* <div class="gameContainer">*@
+    @* <div class="game">*@
+    @* <p>@GameStatus.message(gameStatus)</p>*@
+    @* <p>*@
+    @* =============================================<br>*@
+    @* Trump Card: @trumpCard*@
+    @* </p>*@
+    @* <p>*@
+    @* <b>'@activePlayer'</b> turn:<br>*@
+    @* Attacker: '@attacker'<br>*@
+    @* Defender: '@defender'<br>*@
+    @* Neighbor: '@neighbor'<br>*@
+    @* </p>*@
+    @* <p>*@
+    @* Cards to block: @attackCards<br>*@
+    @* Blocked cards: @blockedCards<br>*@
+    @* Cards on hand: @handCards<br>*@
+    @* Winners: @winners<br>*@
+    @* =============================================<br>*@
+    @* </p>*@
+    @* </div>*@
+    @* </div>*@
+    @* }*@
+    <link rel="stylesheet" type="text/css" href='@routes.Assets.versioned("stylesheets/durak.css")' />
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col"></div>
+            <div class="col">
+                <p id="deckInfo"><b>Cards in Deck: @deckSize</b></p>
+            </div>
+            <div class="col">
+                <p id="trumpCardLabel"><b>Trump Card:</b></p>
             </div>
         </div>
-        }
-    }
+        <div class="row">
+            <div class="col">
+                <div id="gameInfo">
+                    <p><b>Active: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@activePlayer</b></p>
+                    <p><b>Attacker: &nbsp;&nbsp;&nbsp;@attacker</b></p>
+                    <p><b>Victim: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@defender</b></p>
+                    <p><b>Neighbor: &nbsp;&nbsp;@neighbor</b></p>
+
+                </div>
+            </div>
+            <div class="col"></div>
+            <div class="col" id="trumpCardBox">
+                <img id="card" src=@{
+                    routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(trumpCard)
+                            + CardImgConverter.getCardValuePath(trumpCard))
+                } />
+            </div>
+        </div>
+
+        <div class="row" id="attackCards">
+            <div class="col-md-auto">
+                <div class="scrollmenu" >
+                    @for(card <- attackCards) {
+                        <img id="card" src=@{
+                            routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
+                                    + CardImgConverter.getCardValuePath(card))
+                        } />
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="scrollmenu" id="secondScrollContainer">
+                    <div>
+
+                        <div id="blockedCards">
+                            @for(card <- blockCards) {
+                                <img id="card" src=@{
+                                    routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
+                                            + CardImgConverter.getCardValuePath(card))
+                                } />
+                            }
+                        </div>
+
+                        <div id="blockingCards">
+                            @for(card <- blockingCards) {
+                                <img id="card" src=@{
+                                    routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
+                                            + CardImgConverter.getCardValuePath(card))
+                                } />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="handCardsView">
+            <div class="col-md-auto">
+                <div>
+                    <button id="okayButton" class="btn btn-dark" type="button"><b>OKAY!</b></button>
+                </div>
+                <div>
+                    <button id="undoButton" class="btn btn-dark" type="button"><b>UNDO</b></button>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="scrollmenu">
+                @for(card <- handCards) {
+                    <img id="card" src=@{
+                        routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
+                                + CardImgConverter.getCardValuePath(card))
+                    } />
+                }
+                </div>
+            </div>
+            <div class="col-md-auto">
+                <div>
+                    <button id="buttonRight" class="btn btn-dark" type="button"><b>Main Menu</b></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
