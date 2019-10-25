@@ -24,7 +24,6 @@
     var trumpCard: Array[CardInterface] = Array.empty
 
     CardStringConverter.parseCardStringToCardObject(trumpCardAsString)
-
 }
 
 @attacker = @{
@@ -96,44 +95,10 @@
 
 
 @main("HTWG Durak") {
-    @* @if(numberOfPlayers < 2) {*@
-    @* <p>*@
-    @* You have to add at least*@
-    @* <b>2</b>*@
-    @* players before you can play!*@
-    @* </p>*@
-    @* } else if(numberOfPlayers >= 2 && (gameStatus == GameStatus.IDLE || gameStatus == GameStatus.NEWPLAYER)) {*@
-    @* <p>*@
-    @* You have to*@
-    @* <b>start</b>*@
-    @* a game before you can play!*@
-    @* </p>*@
-    @* } else {*@
-    @* <div class="gameContainer">*@
-    @* <div class="game">*@
-    @* <p>@GameStatus.message(gameStatus)</p>*@
-    @* <p>*@
-    @* =============================================<br>*@
-    @* Trump Card: @trumpCard*@
-    @* </p>*@
-    @* <p>*@
-    @* <b>'@activePlayer'</b> turn:<br>*@
-    @* Attacker: '@attacker'<br>*@
-    @* Defender: '@defender'<br>*@
-    @* Neighbor: '@neighbor'<br>*@
-    @* </p>*@
-    @* <p>*@
-    @* Cards to block: @attackCards<br>*@
-    @* Blocked cards: @blockedCards<br>*@
-    @* Cards on hand: @handCards<br>*@
-    @* Winners: @winners<br>*@
-    @* =============================================<br>*@
-    @* </p>*@
-    @* </div>*@
-    @* </div>*@
-    @* }*@
+
     <link rel="stylesheet" type="text/css" href='@routes.Assets.versioned("stylesheets/durak.css")' />
     <div class="container-fluid">
+
         <div class="row">
             <div class="col"></div>
             <div class="col">
@@ -143,6 +108,7 @@
                 <p id="trumpCardLabel"><b>Trump Card:</b></p>
             </div>
         </div>
+
         <div class="row">
             <div class="col">
                 <div id="gameInfo">
@@ -165,12 +131,12 @@
         <div class="row" id="attackCards">
             <div class="col-md-auto">
                 <div class="scrollmenu" >
-                    @for(card <- attackCards) {
-                        <img id="card" src=@{
-                            routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
-                                    + CardImgConverter.getCardValuePath(card))
-                        } />
-                    }
+                @for(card <- attackCards) {
+                    <img id="card" src=@{
+                        routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
+                                + CardImgConverter.getCardValuePath(card))
+                    } />
+                }
                 </div>
             </div>
         </div>
@@ -181,21 +147,21 @@
                     <div>
 
                         <div id="blockedCards">
-                            @for(card <- blockCards) {
-                                <img id="card" src=@{
-                                    routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
-                                            + CardImgConverter.getCardValuePath(card))
-                                } />
-                            }
+                        @for(card <- blockCards) {
+                            <img id="card" src=@{
+                                routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
+                                        + CardImgConverter.getCardValuePath(card))
+                            } />
+                        }
                         </div>
 
                         <div id="blockingCards">
-                            @for(card <- blockingCards) {
-                                <img id="card" src=@{
-                                    routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
-                                            + CardImgConverter.getCardValuePath(card))
-                                } />
-                            }
+                        @for(card <- blockingCards) {
+                            <img id="card" src=@{
+                                routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
+                                        + CardImgConverter.getCardValuePath(card))
+                            } />
+                        }
                         </div>
                     </div>
                 </div>
@@ -204,14 +170,34 @@
 
         <div class="row" id="handCardsView">
             <div class="col-md-auto">
-                <div>
-                    <button id="okayButton" class="btn btn-dark" type="button"><b>OKAY!</b></button>
-                </div>
-                <div>
-                    <button id="undoButton" class="btn btn-dark" type="button"><b>UNDO</b></button>
+                <div id="leftButtonsContainer">
+                    <div>
+                        <a href="http://localhost:9000/ok">
+                            <button id="okayButton" class="btn btn-dark" type="button">
+                                <b>OKAY</b>
+                                <img id="thumpUpImg" src=@routes.Assets.versioned("images/thump_up.png")>
+                            </button>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="http://localhost:9000/take">
+                            <button id="takeButton" class="btn btn-dark">
+                                <b>TAKE</b>
+                                <img id="poopImg" src=@routes.Assets.versioned("images/poop.png")>
+                            </button>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="http://localhost:9000/undo">
+                            <button id="undoButton" class="btn btn-dark" type="button">
+                                <b>UNDO</b>
+                                <img id="undoArrowImg" src=@routes.Assets.versioned("images/undo_arrow.png")>
+                            </button>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-5" id="handCards">
                 <div class="scrollmenu">
                 @for(card <- handCards) {
                     <img id="card" src=@{
@@ -221,6 +207,7 @@
                 }
                 </div>
             </div>
+
             <div class="col-md-auto">
                 <div>
                     <button id="buttonRight" class="btn btn-dark" type="button"><b>Main Menu</b></button>

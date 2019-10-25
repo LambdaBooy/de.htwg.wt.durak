@@ -1,0 +1,44 @@
+@()
+
+@main("HTWG Durak: Main Menu") {
+    <link rel="stylesheet" type="text/css" href='@routes.Assets.versioned("stylesheets/mainMenu.css")'/>
+    <div id="mainMenuContainer">
+        <div id="addPlayerContainer">
+            <h2 id="addPlayerLabel">
+                <b><u>Add Player:</u></b>
+            </h2>
+
+            <div id="playerNameInputBox">
+
+                <p id="playerNameLabel">
+                    <b>Player name:</b>
+                </p>
+                <form action="/addPlayer">
+                    <input type="text" placeholder="Enter your name..." name="name" id="text" maxlength="25">
+                    <button id="submitButton" type="submit" class="btn btn-dark">Add</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="gameRulesContainer">
+            <a href="http://localhost:9000/about">
+                <button id="rulesButton" class="btn btn-dark">
+                    <b>Rules</b>
+                </button>
+            </a>
+        </div>
+
+        <div id="startGameContainer">
+            <a href="http://localhost:9000/newGame">
+                <button id="startGameButton" class="btn btn-dark">
+                    <b>START GAME</b>
+                </button>
+            </a>
+        </div>
+
+        <div id="infoTextContainer">
+            <p id="infoText"><b>
+                Es müssen mindestens zwei Spieler hinzugefügt werden, bevor ein Spiel gestartet werden kann!</b></p>
+        </div>
+    </div>
+}

@@ -1,0 +1,204 @@
+#durakImgContainer {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#generalInformationContainer {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#generalInformationLabel {
+    margin-top: 10px;
+    color: white;
+}
+
+#infoIcon {
+    width: 40px;
+}
+
+#generalInformationContent {
+    margin-top: 20px;
+    color: white;
+    font-size: larger;
+}
+
+#preparationContainer {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#preparationLabel {
+    margin-top: 40px;
+    color: white;
+}
+
+#preparationIcon {
+    width: 50px;
+}
+
+#preparationContent {
+    margin-top: 20px;
+    color: white;
+    font-size: large;
+}
+
+#cardsContainer {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#cardsLabel {
+    margin-top: 40px;
+    color: white;
+}
+
+#cardIcon {
+    width: 50px;
+}
+
+#cardsContent {
+    margin-top: 20px;
+    color: white;
+    font-size: large;
+}
+
+#heartCardsList {
+    margin-top: 20px;
+    white-space: nowrap;
+}
+
+#clubCardsList {
+    margin-top: -115px;
+    white-space: nowrap;
+}
+
+#diamondCardsList {
+    margin-top: -115px;
+    white-space: nowrap;
+}
+
+#spadeCardsList {
+    margin-top: -115px;
+    white-space: nowrap;
+}
+
+#card {
+    width: 110px;
+}
+
+#trumpCardContainer {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#trumpCardLabel {
+    margin-top: 40px;
+    color: white;
+}
+
+#trumpCardIcon {
+    width: 50px;
+}
+
+#trumpCardContent {
+    margin-top: 20px;
+    color: white;
+    font-size: large;
+}
+
+#attackContainer {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#attackLabel {
+    margin-top: 40px;
+    color: white;
+}
+
+#swordsImg {
+    width: 50px;
+}
+
+#attackContent {
+    margin-top: 20px;
+    color: white;
+    font-size: large;
+}
+
+#defenceContainer {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#defenceLabel {
+    margin-top: 40px;
+    color: white;
+}
+
+#shieldImg {
+    width: 50px;
+}
+
+#defenceContent {
+    margin-top: 20px;
+    color: white;
+    font-size: large;
+}
+
+#matchStatusContainer {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#matchStatusLabel {
+    margin-top: 40px;
+    color: white;
+}
+
+#diceIcon {
+    width: 50px;
+}
+
+#matchStatusContent {
+    margin-top: 20px;
+    color: white;
+    font-size: large;
+}
+
+#funAheadImgContainer {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+body {
+    background-color: green;
+}

@@ -3,12 +3,11 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-# An example controller showing a sample home page
 GET     /                           controllers.DurakController.durak
 
 GET     /about                      controllers.DurakController.about
 
-GET     /addPlayer/:name            controllers.DurakController.addPlayer(name: String)
+GET     /addPlayer                  controllers.DurakController.addPlayer(name: String)
 
 GET     /newGame                    controllers.DurakController.newGame
 
@@ -17,6 +16,8 @@ GET     /play/:input                controllers.DurakController.playCard(input: 
 GET     /ok                         controllers.DurakController.ok
 
 GET     /take                       controllers.DurakController.take
+
+GET     /undo                       controllers.DurakController.undo
 
 GET     /exit                       controllers.DurakController.exit
 
