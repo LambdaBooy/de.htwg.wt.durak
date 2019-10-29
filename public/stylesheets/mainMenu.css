@@ -10,10 +10,15 @@
     color: white;
 }
 
+#text {
+    background-color: white;
+}
+
 #playerNameLabel {
     margin-top: 20px;
     color: white;
     font-size: larger;
+    margin-left: 26%;
 }
 
 #gameRulesContainer {
@@ -25,8 +30,9 @@
 }
 
 #submitButton {
-    margin-left: 10px;
+    padding-left: 10px;
     font-size: large;
+    height: 38px;
 }
 
 #startGameContainer {
