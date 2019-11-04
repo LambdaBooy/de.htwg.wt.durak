@@ -97,7 +97,7 @@
 @main("HTWG Durak") {
 
     <link rel="stylesheet" type="text/css" href='@routes.Assets.versioned("stylesheets/durak.css")' />
-    <div class="container-fluid">
+    <div id="gameContainer" class="container-fluid">
 
         <div class="row">
             <div class="col"></div>
@@ -128,40 +128,55 @@
             </div>
         </div>
 
-        <div class="row" id="attackCards">
-            <div class="col-md-auto">
-                <div class="scrollmenu" >
-                @for(card <- attackCards) {
-                    <img id="card" src=@{
-                        routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
-                                + CardImgConverter.getCardValuePath(card))
-                    } />
-                }
+        <div class="row">
+            <div class="col">
+                <div id="attackCards" class="scrollmenu" >
+                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                        <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                        <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                                <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                                        <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
                 </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col">
-                <div class="scrollmenu" id="secondScrollContainer">
+                <div class="scrollmenu" id="defendedCardsContainer">
                     <div>
 
                         <div id="blockedCards">
-                        @for(card <- blockCards) {
-                            <img id="card" src=@{
-                                routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
-                                        + CardImgConverter.getCardValuePath(card))
-                            } />
-                        }
+                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                        <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                                <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                                        <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                                                <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                                                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
                         </div>
 
                         <div id="blockingCards">
-                        @for(card <- blockingCards) {
-                            <img id="card" src=@{
-                                routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
-                                        + CardImgConverter.getCardValuePath(card))
-                            } />
-                        }
+                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                        <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                                <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                                        <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                                                <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                                                                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
                         </div>
                     </div>
                 </div>
@@ -205,12 +220,6 @@
                                 + CardImgConverter.getCardValuePath(card))
                     } />
                 }
-                </div>
-            </div>
-
-            <div class="col-md-auto">
-                <div>
-                    <button id="buttonRight" class="btn btn-dark" type="button"><b>Main Menu</b></button>
                 </div>
             </div>
         </div>

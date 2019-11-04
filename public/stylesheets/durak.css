@@ -1,13 +1,12 @@
 div.scrollmenu {
-    background-color: green;
     overflow: auto;
     white-space: nowrap;
     bottom: 0;
 }
 
+
 div.scrollmenu a {
     display: inline-block;
-    color: white;
     text-align: center;
     padding: 14px;
     text-decoration: none;
@@ -23,12 +22,12 @@ div.scrollmenu a:hover {
 }
 
 #attackCards {
-    margin-left: 10%;
+    margin-left: 10.8%;
     width: 78%;
 }
 
-#secondScrollContainer {
-    width: 77%;
+#defendedCardsContainer {
+    width: 78%;
     margin-top: 30px;
     margin-left: 10.8%;
 }
@@ -42,7 +41,6 @@ div.scrollmenu a:hover {
 }
 
 #handCardsView {
-    position: fixed;
     bottom: 15px;
     width: 200%;
 }
@@ -125,4 +123,108 @@ div.scrollmenu a:hover {
 
 body {
     background-color: green;
+}
+
+@media (max-width: 1790px) {
+    #card {
+        width: 95px;
+    }
+
+    #blockingCards {
+        margin-top: -115px;
+    }
+
+    #trumpCardLabel {
+        font-size: 16px;
+    }
+
+    #deckInfo {
+        font-size: 16px;
+    }
+
+    #gameInfo p {
+        font-size: 16px;
+    }
+
+    #takeButton {
+        font-size: 16px;
+    }
+
+    #okayButton {
+        font-size: 16px;
+    }
+
+    #undoButton {
+        font-size: 16px;
+    }
+
+    #poopImg {
+        width: 35px;
+    }
+
+    #thumpUpImg {
+        width: 25px;
+    }
+
+    #undoArrowImg {
+        width: 25px;
+    }
+}
+
+@media (max-width: 1720px) {
+    #card {
+        width: 90px;
+    }
+
+    #blockingCards {
+        margin-top: -115px;
+    }
+
+    #trumpCardLabel {
+        font-size: 15px;
+    }
+
+    #deckInfo {
+        font-size: 15px;
+    }
+
+    #gameInfo p {
+        font-size: 15px;
+    }
+
+    #takeButton {
+        font-size: 15px;
+    }
+
+    #okayButton {
+        font-size: 15px;
+    }
+
+    #undoButton {
+        font-size: 15px;
+    }
+
+    #poopImg {
+        width: 30px;
+    }
+
+    #thumpUpImg {
+        width: 20px;
+    }
+
+    #undoArrowImg {
+        width: 20px;
+    }
+}
+
+@media (max-width: 1632px) {
+    #card {
+        width: 85px;
+    }
+}
+
+@media (max-width: 1561px) {
+    #card {
+        width: 80px;
+    }
 }
