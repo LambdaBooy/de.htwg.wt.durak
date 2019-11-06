@@ -2,6 +2,10 @@
 @import de.htwg.se.durak.model.cardComponent.CardInterface
 @(controller: de.htwg.se.durak.controller.controllerComponent.ControllerInterface)
 
+@counter = @{
+    0
+}
+
 @numberOfPlayers = @{
     controller.players.size
 }
@@ -121,7 +125,7 @@
             </div>
             <div class="col"></div>
             <div class="col" id="trumpCardBox">
-                <img id="card" src=@{
+                <img class="cardImg" src=@{
                     routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(trumpCard)
                             + CardImgConverter.getCardValuePath(trumpCard))
                 } />
@@ -130,9 +134,9 @@
 
         <div class="row">
             <div class="col">
-                <div id="attackCards" class="scrollmenu" >
+                <div id="attackCards" ondrop="handleHandCardsOnDrop(event)"  ondragover="enableDrop(event)" class="scrollmenu" >
                     @for(card <- attackCards) {
-                        <img id="card" src=@{
+                        <img class="cardImg" src=@{
                             routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
                                     + CardImgConverter.getCardValuePath(card))
                         } />
@@ -148,14 +152,14 @@
 
                         <div id="blockedCards">
                         @for(card <- blockCards) {
-                            <img id="card" src=@{routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
+                            <img class="cardImg" src=@{routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
                                         + CardImgConverter.getCardValuePath(card))} />
                             }
                         </div>
 
                         <div id="blockingCards">
                         @for(card <- blockingCards) {
-                            <img id="card" src=@{
+                            <img class="cardImg" src=@{
                                 routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
                                         + CardImgConverter.getCardValuePath(card))
                             } />
@@ -196,9 +200,9 @@
                 </div>
             </div>
             <div class="col-md-5" id="handCards">
-                <div class="scrollmenu">
-                @for(card <- handCards) {
-                    <img id="card" src=@{
+                <div  ondrop="handleHandCardsOnDrop(event)"  ondragover="enableDrop(event)" class="scrollmenu">
+                @for((card, i) <- handCards.zipWithIndex) {
+                    <img id=@("handCard" + i) draggable="true" ondragstart="handCardDragHandler(event)" class="cardImg" src=@{
                         routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
                                 + CardImgConverter.getCardValuePath(card))
                     } />

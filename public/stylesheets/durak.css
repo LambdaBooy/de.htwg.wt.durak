@@ -16,7 +16,7 @@ div.scrollmenu a:hover {
     background-color: #777;
 }
 
-#card {
+.cardImg {
     width: 100px;
     margin: 10px;
 }
@@ -24,12 +24,15 @@ div.scrollmenu a:hover {
 #attackCards {
     margin-left: 10.8%;
     width: 78%;
+    min-height: 160px;
+    border:2px solid #d4af37;
 }
 
 #defendedCardsContainer {
     width: 78%;
     margin-top: 30px;
     margin-left: 10.8%;
+    min-height: 204px;
 }
 
 #blockedCards {
