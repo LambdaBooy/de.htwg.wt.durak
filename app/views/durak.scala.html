@@ -131,17 +131,12 @@
         <div class="row">
             <div class="col">
                 <div id="attackCards" class="scrollmenu" >
-                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                        <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                        <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                                <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                                        <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                    @for(card <- attackCards) {
+                        <img id="card" src=@{
+                            routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
+                                    + CardImgConverter.getCardValuePath(card))
+                        } />
+                    }
                 </div>
             </div>
         </div>
@@ -152,31 +147,19 @@
                     <div>
 
                         <div id="blockedCards">
-                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                        <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                                <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                                        <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                                                <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                                                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                        @for(card <- blockCards) {
+                            <img id="card" src=@{routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
+                                        + CardImgConverter.getCardValuePath(card))} />
+                            }
                         </div>
 
                         <div id="blockingCards">
-                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                        <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                                <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                                        <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                                            <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                                                <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
-                                                                    <img id="card" src=@routes.Assets.versioned("images/club_1.png")>
+                        @for(card <- blockingCards) {
+                            <img id="card" src=@{
+                                routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
+                                        + CardImgConverter.getCardValuePath(card))
+                            } />
+                        }
                         </div>
                     </div>
                 </div>
