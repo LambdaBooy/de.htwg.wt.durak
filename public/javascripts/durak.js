@@ -5,31 +5,57 @@ function handCardDragHandler(ev) {
 
 function handleHandCardsOnDrop(ev) {
     ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    var cardValue = parseCardSrcName(document.getElementById(data).src);
-
     var activePlayer = document.getElementById("activePlayer").innerText.split(" ")[1].trim();
     var attackingPlayer = document.getElementById("attackingPlayer").innerText.split(" ")[1].trim();
     var defendingPlayer = document.getElementById("defendingPlayer").innerText.split(" ")[1].trim();
     var neighbor = document.getElementById("neighbor").innerText.split(" ")[1].trim();
+    var draggedCard = ev.dataTransfer.getData("text");
+    var cardValue = parseCardSrcName(document.getElementById(draggedCard).src);
 
-    if (activePlayer === attackingPlayer) {
-        $.get("play/" + cardValue, function () {
-            if (!ev.target.id.includes("handCard")) {
-                ev.target.appendChild(document.getElementById(data));
-            } else {
-                alert("Bisch du dumm?");
+    // TODO: Update active player etc.
+    //       Enable throwing cards in....
+    if (!ev.target.id.includes("handCard")) {
+        if (activePlayer === attackingPlayer) {
+            $.ajax({
+                method: "GET",
+                url: "/play/" + cardValue,
+                dataType: "html",
+
+                success: function (data) {
+                    console.log("Game Status:" + data);
+                    if (data === "CARDLAYED") {
+                        ev.target.appendChild(document.getElementById(draggedCard));
+                    } else if (data === "ILLEGALTURN") {
+                        alert("Bisch du dumm?");
+                    }
+                }
+            });
+
+        } else if (activePlayer === defendingPlayer) {
+            var otherCard = ev.target;
+            if (otherCard.tagName === "IMG") {
+                var otherCardValue = parseCardSrcName(otherCard.src);
+
+                $.ajax({
+                    method: "GET",
+                    url: "play/" + cardValue + " " + otherCardValue,
+                    dataType: "html",
+
+                    success: function (data) {
+                        console.log("Game Status:" + data);
+                        if (data === "CARDLAYED") {
+                            var blockedCards = document.getElementById("blockedCards");
+                            blockedCards.append(otherCard);
+
+                            var blockingCards = document.getElementById("blockingCards");
+                            blockingCards.append(document.getElementById(draggedCard));
+                        } else if (data === "ILLEGALTURN") {
+                            alert("Bisch du dumm?");
+                        }
+                    }
+                });
             }
-        });
-    } else if (activePlayer === defendingPlayer) {
-        var otherCardValue = parseCardSrcName(ev.target.src);
-        $.get("play/" + cardValue + " " + otherCardValue, function () {
-            if (!ev.target.id.includes("handCard")) {
-                ev.target.appendChild(document.getElementById(data));
-            } else {
-                alert("Bisch du dumm?");
-            }
-        });
+        }
     }
 }
 

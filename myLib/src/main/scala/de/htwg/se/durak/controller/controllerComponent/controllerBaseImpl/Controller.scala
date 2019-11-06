@@ -54,7 +54,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
     }
   }
 
-  def playCard(firstCard: CardInterface, secondCard: Option[CardInterface]): Unit = {
+  def playCard(firstCard: CardInterface, secondCard: Option[CardInterface]): String = {
     try {
       undoManager.doStep(PlayCommand(firstCard, secondCard, this))
       if (!checkIfGameIsOver) {
@@ -73,6 +73,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
         gameStatus = VICTIMHASNOTENOUGHTCARDS
         notifyUI(vHNECTBE)
     }
+    gameStatus.toString
   }
 
   def throwCardIn(card: CardInterface): Unit = {

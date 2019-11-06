@@ -24,7 +24,7 @@ div.scrollmenu a:hover {
 #attackCards {
     margin-left: 10.8%;
     width: 78%;
-    min-height: 160px;
+    min-height: 168.667px;
     border:2px solid #d4af37;
 }
 
@@ -43,14 +43,9 @@ div.scrollmenu a:hover {
     margin-top: -125px;
 }
 
-#handCardsView {
-    bottom: 15px;
-    min-height: 160px;
-    min-width: 200px;
-}
-
 #handView {
     margin-top: 35px;
+    min-width: 1490px;
 }
 
 #trumpCardBox {
@@ -222,13 +217,13 @@ body {
 }
 
 @media (max-width: 1632px) {
-    #card {
+    .cardImg {
         width: 85px;
     }
 }
 
 @media (max-width: 1561px) {
-    #card {
+    .cardImg {
         width: 80px;
     }
 }

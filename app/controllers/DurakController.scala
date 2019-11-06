@@ -50,12 +50,13 @@ class DurakController @Inject()(cc: ControllerComponents) extends AbstractContro
 
   def playCard(input: String): Action[AnyContent] = Action {
     val tokens = input.split(" ")
+    var result = "This should not happen :'("
     try {
       parseCards(tokens.toList) match {
-        case Success(cards) => gameController.playCard(cards._1, cards._2)
+        case Success(cards) => result = gameController.playCard(cards._1, cards._2)
         case Failure(ex) => System.err.println("Error while parsing cards: " + ex.getMessage)
       }
-      Redirect(routes.DurakController.durak())
+     Ok(result)
     } catch {
       case _: IllegalTurnException => Ok("Card: '" + input + "' doesn't exist!" )
     }
