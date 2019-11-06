@@ -17,4 +17,5 @@ function handleHandCardsOnDrop(ev) {
 
 function enableDrop(ev) {
     ev.preventDefault();
+    console.log("This shit is me!")
 }

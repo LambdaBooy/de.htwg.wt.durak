@@ -45,10 +45,11 @@ div.scrollmenu a:hover {
 
 #handCardsView {
     bottom: 15px;
-    width: 200%;
+    min-height: 160px;
+    min-width: 200px;
 }
 
-#handCards {
+#handView {
     margin-top: 35px;
 }
 
@@ -129,7 +130,7 @@ body {
 }
 
 @media (max-width: 1790px) {
-    #card {
+    .cardImg {
         width: 95px;
     }
 
@@ -175,7 +176,7 @@ body {
 }
 
 @media (max-width: 1720px) {
-    #card {
+    .cardImg {
         width: 90px;
     }
 
