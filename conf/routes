@@ -21,5 +21,22 @@ GET     /undo                       controllers.DurakController.undo
 
 GET     /exit                       controllers.DurakController.exit
 
+GET     /numberOfPlayers            controllers.DurakController.getNumberOfPlayers
+
+GET     /activePlayer               controllers.DurakController.getActivePlayer
+
+GET     /attacker                   controllers.DurakController.getAttacker
+
+GET     /defender                   controllers.DurakController.getDefender
+
+GET     /neighbor                   controllers.DurakController.getNeighbor
+
+GET     /activePlayerHandCards      controllers.DurakController.getActivePlayerHandCards
+
+GET     /attackerHandCards          controllers.DurakController.getAttackerHandCards
+
+GET     /defenderHandCards          controllers.DurakController.getDefenderHandCards
+
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

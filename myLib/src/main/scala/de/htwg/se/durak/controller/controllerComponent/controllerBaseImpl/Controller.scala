@@ -105,7 +105,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
     publish(new CardsChangedEvent)
   }
 
-  def playOk(): Unit = {
+  def playOk(): String = {
     undoManager.purgeMemento()
     try {
       game = game.playOk()
@@ -116,6 +116,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
         gameStatus = LAYCARDFIRST
         notifyUI(new LayCardFirsException)
     }
+    gameStatus.toString
   }
 
   def takeCards(): Unit = {

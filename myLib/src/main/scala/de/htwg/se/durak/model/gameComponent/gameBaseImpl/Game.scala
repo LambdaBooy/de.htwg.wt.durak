@@ -34,7 +34,7 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
     }
   }
 
-  def start(): Game = {
+  def start(): GameInterface = {
     val newDeck: DeckInterface = distributeCards(players)
     val beginner: PlayerInterface = players(math.abs(Random.nextInt()) % players.size)
     val firstVictim: PlayerInterface = getNeighbour(beginner)
@@ -58,7 +58,7 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
     tmpDeck._2
   }
 
-  def playOk(): Game = active match {
+  def playOk(): GameInterface = active match {
     case x if x.equals(currentTurn.attacker) =>
       if (currentTurn.attackCards.nonEmpty) {
         copy(active = nextPlayersMove())
@@ -89,7 +89,7 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
     }
   }
 
-  def takeCards(): Game = active match {
+  def takeCards(): GameInterface = active match {
     case x if x.equals(currentTurn.victim) =>
       active.pickCards(currentTurn.getCards)
       active.sortHandCards
@@ -98,7 +98,7 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
     case _ => throw new NoCardsToTakeException()
   }
 
-  def playCard(card: CardInterface, cardToBlock: Option[CardInterface]): Game = {
+  def playCard(card: CardInterface, cardToBlock: Option[CardInterface]): GameInterface = {
     if (active.hasCard(card)) {
       active match {
         case x if x.equals(currentTurn.victim) =>
@@ -119,7 +119,7 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
     }
   }
 
-  def defend(card: CardInterface, cardToBlock: Option[CardInterface]): Game = cardToBlock match {
+  def defend(card: CardInterface, cardToBlock: Option[CardInterface]): GameInterface = cardToBlock match {
     case Some(enemy) =>
       if (checkBlockCard(card, enemy)) {
         active.dropCards(card :: Nil)
@@ -139,7 +139,7 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
       throw new MissingBlockingCardException()
   }
 
-  def winByDefence(): Game = {
+  def winByDefence(): GameInterface = {
     val newWinners = active :: winners
     val newPlayers = players.filterNot(p => p.equals(active))
     if (newPlayers.size == 1) {
@@ -153,7 +153,7 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
     }
   }
 
-  def attack(card: CardInterface): Game = if (checkAttackCard(card)) {
+  def attack(card: CardInterface): GameInterface = if (checkAttackCard(card)) {
     active.dropCards(card :: Nil)
     if (active.handCards.nonEmpty) {
       copy(currentTurn = currentTurn.addAttackCard(card))
@@ -176,7 +176,7 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
     throw new IllegalTurnException()
   }
 
-  def shove(card: CardInterface): Game = {
+  def shove(card: CardInterface): GameInterface = {
     if (isShovable(card)) {
       active.dropCards(card :: Nil)
       if (active.handCards.nonEmpty) {

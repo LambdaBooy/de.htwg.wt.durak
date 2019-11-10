@@ -56,20 +56,23 @@ class DurakController @Inject()(cc: ControllerComponents) extends AbstractContro
         case Success(cards) => result = gameController.playCard(cards._1, cards._2)
         case Failure(ex) => System.err.println("Error while parsing cards: " + ex.getMessage)
       }
-     Ok(result)
+      Ok(result)
     } catch {
-      case _: IllegalTurnException => Ok("Card: '" + input + "' doesn't exist!" )
+      case _: IllegalTurnException => Ok("Card: '" + input + "' doesn't exist!")
     }
   }
 
   def ok: Action[AnyContent] = Action {
-    gameController.playOk()
-    Redirect(routes.DurakController.durak())
+    Ok(gameController.playOk())
   }
 
   def take: Action[AnyContent] = Action {
     gameController.takeCards()
     Redirect(routes.DurakController.durak())
+  }
+
+  def getNumberOfPlayers: Action[AnyContent] = Action {
+    Ok(gameController.players.size.toString)
   }
 
   def exit: Action[AnyContent] = Action {
@@ -89,5 +92,33 @@ class DurakController @Inject()(cc: ControllerComponents) extends AbstractContro
   def undo: Action[AnyContent] = Action {
     gameController.undo()
     Redirect(routes.DurakController.durak())
+  }
+
+  def getActivePlayer: Action[AnyContent] = Action {
+    Ok(gameController.game.active.name)
+  }
+
+  def getAttacker: Action[AnyContent] = Action {
+    Ok(gameController.game.currentTurn.attacker.name)
+  }
+
+  def getDefender: Action[AnyContent] = Action {
+    Ok(gameController.game.currentTurn.victim.name)
+  }
+
+  def getNeighbor: Action[AnyContent] = Action {
+    Ok(gameController.game.currentTurn.neighbour.name)
+  }
+
+  def getActivePlayerHandCards: Action[AnyContent] = Action {
+    Ok(gameController.game.active.handCards.toString)
+  }
+
+  def getAttackerHandCards: Action[AnyContent] = Action {
+    Ok(gameController.game.currentTurn.attacker.handCards.mkString(","))
+  }
+
+  def getDefenderHandCards: Action[AnyContent] = Action {
+    Ok(gameController.game.currentTurn.victim.handCards.mkString(","))
   }
 }

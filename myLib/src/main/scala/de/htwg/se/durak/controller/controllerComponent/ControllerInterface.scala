@@ -29,7 +29,7 @@ trait ControllerInterface extends Publisher {
 
   def redo(): Unit
 
-  def playOk(): Unit
+  def playOk(): String
 
   def takeCards(): Unit
 

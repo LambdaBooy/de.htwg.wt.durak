@@ -116,10 +116,10 @@
         <div class="row">
             <div class="col">
                 <div id="gameInfo">
-                    <p id="activePlayer" ><b>Active: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@activePlayer</b></p>
-                    <p id="attackingPlayer" ><b>Attacker: &nbsp;&nbsp;&nbsp;@attacker</b></p>
-                    <p id="defendingPlayer"><b>Victim: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@defender</b></p>
-                    <p id="neighbor"><b>Neighbor: &nbsp;&nbsp;@neighbor</b></p>
+                    <p id="activePlayer" >Active: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@activePlayer</p>
+                    <p id="attackingPlayer" >Attacker: &nbsp;&nbsp;&nbsp;@attacker</p>
+                    <p id="defendingPlayer">Victim: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@defender</p>
+                    <p id="neighbor">Neighbor: &nbsp;&nbsp;@neighbor</p>
 
                 </div>
             </div>
@@ -170,16 +170,14 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" id="handViewContainer">
             <div class="col-md-auto">
                 <div id="leftButtonsContainer">
                     <div>
-                        <a href="http://localhost:9000/ok">
-                            <button id="okayButton" class="btn btn-dark" type="button">
-                                <b>OKAY</b>
-                                <img id="thumpUpImg" src=@routes.Assets.versioned("images/thump_up.png")>
-                            </button>
-                        </a>
+                        <button id="okayButton" class="btn btn-dark" type="button" onclick="playOk()">
+                            <b>OKAY</b>
+                            <img id="thumpUpImg" src=@routes.Assets.versioned("images/thump_up.png")>
+                        </button>
                     </div>
                     <div>
                         <a href="http://localhost:9000/take">
@@ -202,7 +200,7 @@
             <div id="handView" ondrop="handleHandCardsOnDrop(event)"  ondragover="enableDrop(event)" class="col-md-5">
                 <div class="scrollmenu">
                 @for((card, i) <- handCards.zipWithIndex) {
-                    <img id=@("handCard" + i) draggable="true" ondragstart="handCardDragHandler(event)" class="cardImg" src=@{
+                    <img id=@("handCard" + i) draggable="true" ondragstart="handleCardOnDrag(event)" class="cardImg" src=@{
                         routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
                                 + CardImgConverter.getCardValuePath(card))
                     } />
