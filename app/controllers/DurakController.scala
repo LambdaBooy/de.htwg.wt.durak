@@ -62,13 +62,24 @@ class DurakController @Inject()(cc: ControllerComponents) extends AbstractContro
     }
   }
 
+  def throwCardIn(input: String): Action[AnyContent] = Action {
+    val tokens = input.split(" ");
+    var result = "This should not happen :'("
+    try {
+      parseCards(tokens.toList) match {
+        case Success(cards) => result = gameController.throwCardIn(cards._1)
+        case Failure(ex) => System.err.println("Error while parsing cards: " + ex.getMessage)
+      }
+      Ok(result)
+    }
+  }
+
   def ok: Action[AnyContent] = Action {
     Ok(gameController.playOk())
   }
 
   def take: Action[AnyContent] = Action {
-    gameController.takeCards()
-    Redirect(routes.DurakController.durak())
+    Ok(gameController.takeCards());
   }
 
   def getNumberOfPlayers: Action[AnyContent] = Action {
@@ -90,8 +101,7 @@ class DurakController @Inject()(cc: ControllerComponents) extends AbstractContro
   }
 
   def undo: Action[AnyContent] = Action {
-    gameController.undo()
-    Redirect(routes.DurakController.durak())
+    Ok(gameController.undo());
   }
 
   def getActivePlayer: Action[AnyContent] = Action {
@@ -120,5 +130,17 @@ class DurakController @Inject()(cc: ControllerComponents) extends AbstractContro
 
   def getDefenderHandCards: Action[AnyContent] = Action {
     Ok(gameController.game.currentTurn.victim.handCards.mkString(","))
+  }
+
+  def getAttackCards: Action[AnyContent] = Action {
+    Ok(gameController.game.currentTurn.attackCards.mkString(","))
+  }
+
+  def getBlockedCards: Action[AnyContent] = Action {
+    Ok(gameController.game.currentTurn.blockedBy.keys.mkString(","))
+  }
+
+  def getBlockingCards: Action[AnyContent] = Action {
+    Ok(gameController.game.currentTurn.blockedBy.values.mkString(","))
   }
 }

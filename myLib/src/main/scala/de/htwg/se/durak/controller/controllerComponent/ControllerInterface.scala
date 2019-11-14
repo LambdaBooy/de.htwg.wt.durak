@@ -23,15 +23,15 @@ trait ControllerInterface extends Publisher {
 
   def playCard(firstCard: CardInterface, secondCard: Option[CardInterface]): String
 
-  def throwCardIn(card: CardInterface): Unit
+  def throwCardIn(card: CardInterface): String
 
-  def undo(): Unit
+  def undo(): String
 
   def redo(): Unit
 
   def playOk(): String
 
-  def takeCards(): Unit
+  def takeCards(): String
 
   def checkIfGameIsOver: Boolean
 

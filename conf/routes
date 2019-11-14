@@ -13,6 +13,8 @@ GET     /newGame                    controllers.DurakController.newGame
 
 GET     /play/:input                controllers.DurakController.playCard(input: String)
 
+GET     /throwIn/:input             controllers.DurakController.throwCardIn(input: String)
+
 GET     /ok                         controllers.DurakController.ok
 
 GET     /take                       controllers.DurakController.take
@@ -37,6 +39,11 @@ GET     /attackerHandCards          controllers.DurakController.getAttackerHandC
 
 GET     /defenderHandCards          controllers.DurakController.getDefenderHandCards
 
+GET     /attackCards                controllers.DurakController.getAttackCards
+
+GET     /blockedCards               controllers.DurakController.getBlockedCards
+
+GET     /blockingCards              controllers.DurakController.getBlockingCards
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

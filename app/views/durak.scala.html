@@ -57,14 +57,14 @@
     attackCards
 }
 
-@blockCards = @{
-    var blockCards: Array[CardInterface] = Array.empty
+@blockedCards = @{
+    var blockedCards: Array[CardInterface] = Array.empty
 
     for((blockCard, blockingCard) <- controller.getCurrentBlockedByMap) {
-        blockCards = blockCards :+ blockCard
+        blockedCards = blockedCards :+ blockCard
     }
 
-    blockCards
+    blockedCards
 }
 
 @blockingCards = @{
@@ -125,7 +125,7 @@
             </div>
             <div class="col"></div>
             <div class="col" id="trumpCardBox">
-                <img class="cardImg" src=@{
+                <img id="trumpCard" class="cardImg" src=@{
                     routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(trumpCard)
                             + CardImgConverter.getCardValuePath(trumpCard))
                 } />
@@ -135,8 +135,8 @@
         <div class="row">
             <div class="col">
                 <div id="attackCards" ondrop="handleHandCardsOnDrop(event)"  ondragover="enableDrop(event)" class="scrollmenu" >
-                    @for(card <- attackCards) {
-                        <img class="cardImg" src=@{
+                    @for((card, i) <- attackCards.zipWithIndex) {
+                        <img id=@("attackCard" + i) class="cardImg" src=@{
                             routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
                                     + CardImgConverter.getCardValuePath(card))
                         } />
@@ -151,15 +151,15 @@
                     <div>
 
                         <div id="blockedCards">
-                        @for(card <- blockCards) {
-                            <img class="cardImg" src=@{routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
+                        @for((card, i) <- blockedCards.zipWithIndex) {
+                            <img id=@("blockedCard" + i) class="cardImg" src=@{routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
                                         + CardImgConverter.getCardValuePath(card))} />
                             }
                         </div>
 
                         <div id="blockingCards">
-                        @for(card <- blockingCards) {
-                            <img class="cardImg" src=@{
+                        @for((card, i) <- blockingCards.zipWithIndex) {
+                            <img id=@("blockingCard" + i) class="cardImg" src=@{
                                 routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
                                         + CardImgConverter.getCardValuePath(card))
                             } />
@@ -180,24 +180,20 @@
                         </button>
                     </div>
                     <div>
-                        <a href="http://localhost:9000/take">
-                            <button id="takeButton" class="btn btn-dark">
-                                <b>TAKE</b>
-                                <img id="poopImg" src=@routes.Assets.versioned("images/poop.png")>
-                            </button>
-                        </a>
+                        <button id="takeButton" onclick="takeCards()" class="btn btn-dark">
+                            <b>TAKE</b>
+                            <img id="poopImg" src=@routes.Assets.versioned("images/poop.png")>
+                        </button>
                     </div>
                     <div>
-                        <a href="http://localhost:9000/undo">
-                            <button id="undoButton" class="btn btn-dark" type="button">
-                                <b>UNDO</b>
-                                <img id="undoArrowImg" src=@routes.Assets.versioned("images/undo_arrow.png")>
-                            </button>
-                        </a>
+                        <button id="undoButton" class="btn btn-dark" onclick="undo()" type="button">
+                            <b>UNDO</b>
+                            <img id="undoArrowImg" src=@routes.Assets.versioned("images/undo_arrow.png")>
+                        </button>
                     </div>
                 </div>
             </div>
-            <div id="handView" ondrop="handleHandCardsOnDrop(event)"  ondragover="enableDrop(event)" class="col-md-5">
+            <div id="handView" ondrop="handleHandCardsOnDrop(event)" class="col-md-5">
                 <div class="scrollmenu">
                 @for((card, i) <- handCards.zipWithIndex) {
                     <img id=@("handCard" + i) draggable="true" ondragstart="handleCardOnDrag(event)" class="cardImg" src=@{

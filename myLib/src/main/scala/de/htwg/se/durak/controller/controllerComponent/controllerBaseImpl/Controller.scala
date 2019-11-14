@@ -76,7 +76,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
     gameStatus.toString
   }
 
-  def throwCardIn(card: CardInterface): Unit = {
+  def throwCardIn(card: CardInterface): String = {
     try {
       undoManager.doStep(PlayCommand(card, None, this))
       if (!checkIfGameIsOver) {
@@ -91,12 +91,14 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
         gameStatus = ILLEGALTURN
         notifyUI(iTE)
     }
+    gameStatus.toString
   }
 
-  def undo(): Unit = {
+  def undo(): String = {
     undoManager.undoStep()
     gameStatus = UNDO
     publish(new CardsChangedEvent)
+    gameStatus.toString;
   }
 
   def redo(): Unit = {
@@ -119,7 +121,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
     gameStatus.toString
   }
 
-  def takeCards(): Unit = {
+  def takeCards(): String = {
     try {
       undoManager.purgeMemento()
       game = game.takeCards()
@@ -130,6 +132,8 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
         gameStatus = NOCARDSTOTAKE
         notifyUI(nCTTE)
     }
+
+    gameStatus.toString();
   }
 
   def checkIfGameIsOver: Boolean = {
