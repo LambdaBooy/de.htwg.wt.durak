@@ -152,7 +152,7 @@ function playOk() {
                         function () {
                             console.log(attackCards);
 
-                            if (attackCards == "") {
+                            if (attackCards === "") {
                                 $.when(updateHandCards("attacker")).done(function () {
                                     updateComponentsForActivePlayer();
                                 });
