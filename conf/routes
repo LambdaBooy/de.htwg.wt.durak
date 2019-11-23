@@ -7,7 +7,7 @@ GET     /                           controllers.DurakController.durak
 
 GET     /about                      controllers.DurakController.about
 
-GET     /addPlayer                  controllers.DurakController.addPlayer(name: String)
+GET     /addPlayer/:name            controllers.DurakController.addPlayer(name: String)
 
 GET     /newGame                    controllers.DurakController.newGame
 
@@ -21,29 +21,19 @@ GET     /take                       controllers.DurakController.take
 
 GET     /undo                       controllers.DurakController.undo
 
-GET     /exit                       controllers.DurakController.exit
+GET     /websocket                  controllers.DurakController.socket(playerName: Option[String])
 
-GET     /numberOfPlayers            controllers.DurakController.getNumberOfPlayers
+GET     /json                       controllers.DurakController.gameToJson
 
-GET     /activePlayer               controllers.DurakController.getActivePlayer
+GET     /playerName                 controllers.DurakController.getPlayerName
 
-GET     /attacker                   controllers.DurakController.getAttacker
+GET     /playerRole                 controllers.DurakController.getPlayerRole
 
-GET     /defender                   controllers.DurakController.getDefender
+GET     /players                    controllers.DurakController.getPlayers
 
-GET     /neighbor                   controllers.DurakController.getNeighbor
+GET     /check                      controllers.DurakController.check
 
-GET     /activePlayerHandCards      controllers.DurakController.getActivePlayerHandCards
-
-GET     /attackerHandCards          controllers.DurakController.getAttackerHandCards
-
-GET     /defenderHandCards          controllers.DurakController.getDefenderHandCards
-
-GET     /attackCards                controllers.DurakController.getAttackCards
-
-GET     /blockedCards               controllers.DurakController.getBlockedCards
-
-GET     /blockingCards              controllers.DurakController.getBlockingCards
+GET     /gameStatus                 controllers.DurakController.gameStatus
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

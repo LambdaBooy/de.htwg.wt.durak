@@ -1,33 +1,196 @@
-var numberOfPlayers = undefined;
+var playerName = undefined;
+var playerRole = undefined;
+
 var activePlayer = undefined;
 var attacker = undefined;
 var defender = undefined;
 var neighbor = undefined;
-var blockingCards = undefined;
-var blockedCards = undefined;
-var attackCards = undefined;
+
+var websocket = undefined;
 
 $(function () {
-    $.when(updateNumberOfPlayers(), updateActivePlayer(), updateAttacker(), updateDefender(), updateNeighbor(),
-        updateBlockingCards(), updateBlockedCards(), updateAttackCards()).done(function () {
-        updateComponentsForActivePlayer();
-    });
+    connectWebSocket();
 });
 
-function updateComponentsForActivePlayer() {
-    if (activePlayer === defender) {
-        if (blockingCards === "") {
-            showThrowInPlaceHolder();
+function connectWebSocket() {
+    websocket = new WebSocket("ws://localhost:9000/websocket");
+    websocket.setTimeout;
+
+    websocket.onopen = function (event) {
+        console.log("Connected to Websocket");
+        websocket.send("test");
+    };
+
+    websocket.onclose = function () {
+        console.log('Connection with Websocket Closed!');
+        connectWebSocket();
+    };
+
+    websocket.onerror = function (error) {
+        console.log('Error in Websocket Occured: ' + error);
+        connectWebSocket();
+    };
+
+    websocket.onmessage = function (event) {
+        if (typeof event.data === "string") {
+            let json = JSON.parse(event.data);
+
+            console.log(json)
+
+            $.when($.ajax({
+                method: "GET",
+                url: "/playerName",
+                dataType: "html",
+
+                success: function (data) {
+                    playerName = data;
+                    document.getElementById("playerName").innerText = "Your name:  \u00A0\u00A0\u00A0\u00A0" +
+                        "\u00A0\u00A0\u00A0" + data
+                }
+            })).done(function () {
+
+                activePlayer = json.game.active.player.name;
+
+                $.when($.ajax({
+                    method: "GET",
+                    url: "/playerRole",
+                    dataType: "html",
+
+                    success: function (data) {
+                        console.log(data);
+                        playerRole = data;
+                    }
+                })).done(function () {
+                    updateComponents();
+                });
+
+                let activePlayerParagraph = document.getElementById("activePlayer");
+                activePlayerParagraph.innerText = "Active: \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" +
+                    "\u00A0\u00A0\u00A0\u00A0" + activePlayer;
+
+
+                attacker = json.game.currentTurn.attacker.player.name;
+
+                let attackingPlayerParagraph = document.getElementById("attackingPlayer");
+                attackingPlayerParagraph.innerText = "Attacker: \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" +
+                    "\u00A0\u00A0\u00A0" + attacker;
+
+                defender = json.game.currentTurn.victim.player.name;
+
+                let defendingPlayerParagraph = document.getElementById("defendingPlayer");
+                defendingPlayerParagraph.innerText = "Victim: \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" +
+                    "\u00A0\u00A0\u00A0\u00A0" + defender;
+
+                neighbor = json.game.currentTurn.neighbour.player.name;
+
+                let neighborParagraph = document.getElementById("neighbor");
+                neighborParagraph.innerText = "Neighbor: \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"
+                    + neighbor;
+
+                let deckInfoParagraph = document.getElementById("deckInfo");
+                deckInfoParagraph.innerText = "Cards in Deck:";
+
+                let playersAsJson = json.game.players;
+
+                let handCardsElement = document.getElementById("handView").children[0];
+                handCardsElement.innerHTML = "";
+
+                let j = 0;
+                for (i = 0; i < playersAsJson.length; i++) {
+                    let player = playersAsJson[i].player;
+
+                    if (player.name === playerName) {
+                        player.handCards.forEach(cardObj => {
+                            let cardColor = cardObj.card.color;
+                            let cardValue = cardObj.card.value;
+
+                            let cardSrcName = getCardSrcName(cardColor, cardValue);
+                            let cardImg = createCard("handCard" + j, cardSrcName);
+                            handCardsElement.append(cardImg);
+                            j++;
+                        });
+                    }
+                }
+
+                let attackCardsAsJson = json.game.currentTurn.attackCards;
+                let attackCardsElement = document.getElementById("attackCards");
+                attackCardsElement.innerHTML = "";
+
+                j = 0;
+
+                attackCardsAsJson.forEach(attackCardObj => {
+                    let cardColor = attackCardObj.card.color;
+                    let cardValue = attackCardObj.card.value;
+
+                    let cardSrcName = getCardSrcName(cardColor, cardValue);
+                    let cardImg = createCard("attackCard" + j, cardSrcName);
+                    attackCardsElement.append(cardImg);
+                    j++;
+                });
+
+                let blockedByMap = json.game.currentTurn.blockedBy;
+
+                let blockedCardsElement = document.getElementById("blockedCards");
+                blockedCardsElement.innerHTML = "";
+
+                let blockingCardsElement = document.getElementById("blockingCards");
+                blockingCardsElement.innerHTML = "";
+
+                blockedByMap.forEach(entry => {
+                    let blockedCardColor = entry.attackCards.card.color;
+                    let blockedCardValue = entry.attackCards.card.value;
+
+                    let blockedCardSrcName = getCardSrcName(blockedCardColor, blockedCardValue);
+                    let blockedCardsSize = blockedCardsElement.children.length;
+                    let blockedCard = createCard("blockedCard" + blockedCardsSize, blockedCardSrcName);
+                    blockedCardsElement.append(blockedCard);
+
+                    let blockingCardColor = entry.blockingCards.card.color;
+                    let blockingCardValue = entry.blockingCards.card.value;
+
+                    let blockingCardSrcName = getCardSrcName(blockingCardColor, blockingCardValue);
+                    let blockingCardsSize = blockingCardsElement.children.length;
+                    let blockingCard = createCard("blockingCard" + blockingCardsSize, blockingCardSrcName);
+                    blockingCardsElement.append(blockingCard);
+                });
+            })
         }
-        disableOkButton();
-    } else {
-        updateAttackCards();
-        enableOkButton();
     }
 }
 
-function handleCardOnDrag(ev) {
-    ev.dataTransfer.setData("text", ev.target.id);
+function updateComponents() {
+    if (playerRole === "defender") {
+        if (activePlayer === playerName) {
+            enableCardDragAndDrop();
+            enableUndoButton();
+            enableTakeButton();
+
+            let blockingCards = document.getElementById("blockingCards");
+            if (blockingCards !== null) {
+                if (blockingCards.children.length === 0) {
+                    showThrowInPlaceHolder();
+                }
+            }
+        } else {
+            disableCardDragAndDrop();
+            disableUndoButton();
+            disableTakeButton();
+        }
+
+        disableOkButton();
+    } else {
+        if (activePlayer === playerName) {
+            enableCardDragAndDrop();
+            enableUndoButton();
+            enableTakeButton();
+            enableOkButton()
+        } else {
+            disableCardDragAndDrop();
+            disableOkButton();
+            disableUndoButton();
+            disableTakeButton();
+        }
+    }
 }
 
 function handleHandCardsOnDrop(ev) {
@@ -39,18 +202,8 @@ function handleHandCardsOnDrop(ev) {
         playAsAttacker(draggedCard, draggedCardValue, ev);
     } else if (activePlayer === defender) {
         playAsDefender(draggedCard, draggedCardValue, ev);
-
-        if (numberOfPlayers === "2") {
-            if (attackCards === "") {
-                console.log("JETZT!");
-                console.log("attackCards: " + attackCards);
-                updateHandCards("attacker");
-            }
-        } else {
-            alert("Not implemented yet!");
-        }
     } else if (activePlayer === neighbor) {
-        alert("Not implemented yet!");
+        alert("Not implemented yet! 1");
     }
 }
 
@@ -61,14 +214,7 @@ function playAsAttacker(draggedCard, cardValue, ev) {
         dataType: "html",
 
         success: function (data) {
-            if (data === "CARDLAYED") {
-                let cardColorValueArr = cardValue.split(" ");
-                let cardSrcName = getCardSrcName(cardColorValueArr[0], cardColorValueArr[1]);
-                let attackCardsSize = document.getElementById("attackCards").children.length;
-                let card = createCard("attackCard" + attackCardsSize, cardSrcName);
-                ev.target.appendChild(card);
-                updateHandCards("attacker");
-            } else if (data === "ILLEGALTURN") {
+            if (data !== "CARDLAYED") {
                 alert("Bisch du dumm?");
             }
         }
@@ -82,56 +228,13 @@ function playAsDefender(draggedCard, cardValue, ev) {
         $.ajax({
             method: "GET",
             url: "play/" + cardValue + " " + otherCardValue,
-            dataType: "html",
-
-            success: function (data) {
-                if (data === "CARDLAYED") {
-                    let blockedCardsElement = document.getElementById("blockedCards");
-                    let blockedCardColorValueArr = otherCardValue.split(" ");
-                    let blockedCardSrcName = getCardSrcName(blockedCardColorValueArr[0], blockedCardColorValueArr[1]);
-                    let blockedCardsSize = blockedCardsElement.children.length;
-                    let blockedCard = createCard("blockedCard" + blockedCardsSize, blockedCardSrcName);
-                    blockedCardsElement.append(blockedCard);
-
-                    let blockingCardsElement = document.getElementById("blockingCards");
-                    let blockingCardColorValueArr = cardValue.split(" ");
-                    let blockingCardSrcName = getCardSrcName(blockingCardColorValueArr[0], blockingCardColorValueArr[1]);
-                    let blockingCardsSize = blockingCardsElement.children.length;
-                    let blockingCard = createCard("blockingCard" + blockingCardsSize, blockingCardSrcName);
-                    blockingCardsElement.append(blockingCard);
-
-                    $.when(updateActivePlayer(), updateAttacker(), updateDefender(), updateNeighbor(),
-                        updateAttackCards(), updateBlockingCards(), updateBlockedCards()).done(function () {
-                        updateComponentsForActivePlayer();
-                        if (attackCards === "") {
-                            updateHandCards("attacker");
-                        } else {
-                            updateHandCards("defender");
-                        }
-                    });
-
-                } else if (data === "ILLEGALTURN") {
-                    alert("Bisch du dumm?");
-                }
-            }
+            dataType: "html"
         });
     } else if (otherCard.id === "placeholder") {
         $.ajax({
             method: "GET",
             url: "throwIn/" + cardValue,
-            dataType: "html",
-
-            success: function (data) {
-                console.log("HIER: " + data);
-                if (data === "CARDLAYED") {
-                    $.when(updateActivePlayer(), updateAttacker(), updateDefender(), updateNeighbor(),
-                        updateBlockedCards(), updateBlockingCards()).done(function () {
-                        updateHandCards("attacker");
-                        updateAttackCards();
-                        updateComponentsForActivePlayer();
-                    });
-                }
-            }
+            dataType: "html"
         });
     } else {
         alert("Bidde was? ¯\\_(ツ)_/¯ ")
@@ -145,52 +248,11 @@ function playOk() {
         dataType: "html",
 
         success: function (data) {
-            if (data !== "LAYCARDFIRST") {
-                if (activePlayer === attacker) {
-                    $.when(updateActivePlayer(), updateAttacker(), updateDefender(), updateNeighbor(),
-                        updateAttackCards(), updateBlockedCards(), updateBlockingCards()).done(
-                        function () {
-                            console.log(attackCards);
-
-                            if (attackCards === "") {
-                                $.when(updateHandCards("attacker")).done(function () {
-                                    updateComponentsForActivePlayer();
-                                });
-                            } else {
-                                $.when(updateHandCards("defender")).done(function () {
-                                    updateComponentsForActivePlayer();
-                                });
-                            }
-                        }
-                    );
-
-                } else {
-                    if (numberOfPlayers > 2 && activePlayer === neighbor) {
-                        alert("Not implemented yet!");
-                    }
-                }
-            } else {
+            if (data === "LAYCARDFIRST") {
                 alert(data);
             }
         }
     });
-}
-
-function enableDrop(ev) {
-    if (activePlayer === defender) {
-        if (ev.target.id === "attackCards") {
-            return;
-        } else if (ev.target.id === "placeholder") {
-            let attackCardsValue = attackCards.split(",")[0].split(" ")[1];
-            let draggedCard = document.getElementById(ev.dataTransfer.getData("text"));
-            let draggedCardValue = getCardValueFromSrc(draggedCard.src).split(" ")[1];
-
-            if (draggedCardValue !== attackCardsValue) {
-                return;
-            }
-        }
-    }
-    ev.preventDefault();
 }
 
 function getCardValueFromSrc(srcName) {
@@ -220,68 +282,6 @@ function getCardValueFromSrc(srcName) {
     return typeDict[cardNameArr[0]].concat(" ").concat(valueDict[cardNameArr[1]]);
 }
 
-function updateNumberOfPlayers() {
-    return $.ajax({
-        method: "GET",
-        url: "/numberOfPlayers",
-        dataType: "html",
-
-        success: function (data) {
-            numberOfPlayers = data;
-        }
-    });
-}
-
-function updateHandCards(player) {
-    if (player === "attacker") {
-        return $.ajax({
-            method: "GET",
-            url: "/attackerHandCards",
-            dataType: "html",
-
-            success: function (data) {
-                let handCardsElement = document.getElementById("handView").children[0];
-                let newHandCards = data.split(",");
-                let i = 0;
-
-                handCardsElement.innerHTML = "";
-
-                newHandCards.forEach(function (card) {
-                    let cardColorValueArr = card.split(" ");
-                    let cardSrcName = getCardSrcName(cardColorValueArr[0], cardColorValueArr[1]);
-                    let cardImg = createCard("handCard" + i, cardSrcName);
-                    handCardsElement.append(cardImg);
-                    i++;
-                });
-            }
-        });
-    } else if (player === "defender") {
-        return $.ajax({
-            method: "GET",
-            url: "/defenderHandCards",
-            dataType: "html",
-
-            success: function (data) {
-                let handCardsElement = document.getElementById("handView").children[0];
-                let cards = data.split(",");
-                let i = 0;
-
-                handCardsElement.innerHTML = "";
-
-                cards.forEach(function (card) {
-                    let cardColorValueArr = card.split(" ");
-                    let cardSrcName = getCardSrcName(cardColorValueArr[0], cardColorValueArr[1]);
-                    let cardImg = createCard("handCard" + i, cardSrcName);
-                    handCardsElement.append(cardImg);
-                    i++;
-                });
-            }
-        });
-    } else {
-        alert("Not implemented yet!");
-    }
-}
-
 function showThrowInPlaceHolder() {
     let img = document.createElement('img');
     img.id = "placeholder";
@@ -290,60 +290,24 @@ function showThrowInPlaceHolder() {
     document.getElementById("attackCards").append(img);
 }
 
-function updateActivePlayer() {
-    return $.ajax({
-        method: "GET",
-        url: "/activePlayer",
-        dataType: "html",
-
-        success: function (data) {
-            activePlayer = data;
-            let activePlayerParagraph = document.getElementById("activePlayer");
-            activePlayerParagraph.innerText = "Active: \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + activePlayer;
-        }
-    });
+function enableDrop(ev) {
+    ev.preventDefault();
 }
 
-function updateAttacker() {
-    return $.ajax({
-        method: "GET",
-        url: "/attacker",
-        dataType: "html",
+function disableCardDragAndDrop() {
+    let cards = document.getElementById("handView").children[0].children;
 
-        success: function (data) {
-            attacker = data;
-            let attackingPlayerParagraph = document.getElementById("attackingPlayer");
-            attackingPlayerParagraph.innerText = "Attacker: \u00A0\u00A0\u00A0" + attacker;
-        }
-    });
+    for (i = 0; i < cards.length; i++) {
+        cards[i].setAttribute("draggable", "false");
+    }
 }
 
-function updateDefender() {
-    return $.ajax({
-        method: "GET",
-        url: "/defender",
-        dataType: "html",
+function enableCardDragAndDrop() {
+    let cards = document.getElementById("handView").children[0].children;
 
-        success: function (data) {
-            defender = data;
-            let defendingPlayerParagraph = document.getElementById("defendingPlayer");
-            defendingPlayerParagraph.innerText = "Victim: \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + defender;
-        }
-    });
-}
-
-function updateNeighbor() {
-    return $.ajax({
-        method: "GET",
-        url: "/neighbor",
-        dataType: "html",
-
-        success: function (data) {
-            neighbor = data;
-            let neighborParagraph = document.getElementById("neighbor");
-            neighborParagraph.innerText = "Neighbor: \u00A0\u00A0" + neighbor;
-        }
-    });
+    for (i = 0; i < cards.length; i++) {
+        cards[i].setAttribute("draggable", "true");
+    }
 }
 
 function disableOkButton() {
@@ -354,88 +318,30 @@ function enableOkButton() {
     document.getElementById("okayButton").disabled = false;
 }
 
-
-function updateAttackCards() {
-    return $.ajax({
-        method: "GET",
-        url: "/attackCards",
-        dataType: "html",
-
-        success: function (data) {
-            attackCards = data;
-
-            let attackCardsElement = document.getElementById("attackCards");
-            attackCardsElement.innerHTML = "";
-
-            if (data !== "") {
-                let newAttackCards = data.split(",");
-                let i = 0;
-
-                newAttackCards.forEach(function (card) {
-                    let cardColorValueArr = card.split(" ");
-                    let cardSrcName = getCardSrcName(cardColorValueArr[0], cardColorValueArr[1]);
-                    let cardImg = createCard("attackCard" + i, cardSrcName);
-                    attackCardsElement.append(cardImg);
-                    i++;
-                });
-            }
-        }
-    });
+function disableUndoButton() {
+    document.getElementById("undoButton").disabled = true;
 }
 
-function updateBlockedCards() {
-    return $.ajax({
-        method: "GET",
-        url: "/blockedCards",
-        dataType: "html",
-
-        success: function (data) {
-            blockedCards = data;
-
-            let blockedCardsElement = document.getElementById("blockedCards");
-            blockedCardsElement.innerHTML = "";
-
-            if (data !== "") {
-                let newBlockedCards = data.split(",");
-                let i = 0;
-
-                newBlockedCards.forEach(function (card) {
-                    let cardColorValueArr = card.split(" ");
-                    let cardSrcName = getCardSrcName(cardColorValueArr[0], cardColorValueArr[1]);
-                    let cardImg = createCard("blockedCard" + i, cardSrcName);
-                    blockedCardsElement.append(cardImg);
-                    i++;
-
-                });
-            }
-        }
-    });
+function enableUndoButton() {
+    document.getElementById("undoButton").disabled = false;
 }
 
-function updateBlockingCards() {
+function disableTakeButton() {
+    document.getElementById("takeButton").disabled = true;
+}
+
+function enableTakeButton() {
+    document.getElementById("takeButton").disabled = false;
+}
+
+function updatePlayerRole() {
     return $.ajax({
         method: "GET",
-        url: "/blockingCards",
+        url: "/playerRole",
         dataType: "html",
 
         success: function (data) {
-            blockingCards = data;
-
-            let blockingCardsElement = document.getElementById("blockingCards");
-            blockingCardsElement.innerHTML = "";
-
-            if (data !== "") {
-                let newBlockingCards = data.split(",");
-                let i = 0;
-
-                newBlockingCards.forEach(function (card) {
-                    let cardColorValueArr = card.split(" ");
-                    let cardSrcName = getCardSrcName(cardColorValueArr[0], cardColorValueArr[1]);
-                    let cardImg = createCard("blockingCard" + i, cardSrcName);
-                    blockingCardsElement.append(cardImg);
-                    i++;
-                });
-            }
+            playerRole = data;
         }
     });
 }
@@ -447,13 +353,7 @@ function takeCards() {
         dataType: "html",
 
         success: function (data) {
-            if (data === "TAKE") {
-                $.when(updateAttackCards(), updateBlockingCards(), updateBlockedCards(), updateActivePlayer(),
-                    updateAttacker(), updateDefender(), updateNeighbor()).done(function () {
-                    updateHandCards("attacker");
-                    updateComponentsForActivePlayer();
-                });
-            } else {
+            if (data !== "TAKE") {
                 alert("There are no cards to take!");
             }
         }
@@ -465,20 +365,6 @@ function undo() {
         method: "GET",
         url: "/undo",
         dataType: "html",
-
-        success: function (data) {
-            $.when(updateAttackCards(), updateBlockingCards(), updateBlockedCards(), updateActivePlayer(),
-                updateAttacker(), updateDefender(), updateNeighbor()).done(function () {
-                    if (activePlayer === attacker) {
-                        updateHandCards("attacker");
-                    } else if (activePlayer === defender) {
-                        updateHandCards("defender");
-                    } else {
-                        alert("Not implemented yet!");
-                    }
-                updateComponentsForActivePlayer();
-            });
-        }
     });
 }
 

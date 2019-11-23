@@ -1,50 +1,74 @@
-@()
+@(controller: de.htwg.se.durak.controller.controllerComponent.ControllerInterface)
 
-@main("HTWG Durak: Main Menu") {
-    <link rel="stylesheet" type="text/css" href='@routes.Assets.versioned("stylesheets/mainMenu.css")'/>
-    <div id="mainMenuContainer">
-        <div id="addPlayerContainer">
-            <h2 id="addPlayerLabel">
-                <b><u>Add Player:</u></b>
-            </h2>
+    @connectedPlayers = @{
+        controller.players
+    }
 
-            <div id="playerNameInputBox">
+    @connectedPlayersSize = @{
+        controller.players.size
+    }
 
-                <p id="playerNameLabel">
-                    <b>Player name:</b>
-                </p>
-                <form action="/addPlayer">
+    @main("HTWG Durak: Main Menu") {
+        <link rel="stylesheet" type="text/css" href='@routes.Assets.versioned("stylesheets/mainMenu.css")'/>
+        <div id="mainMenuContainer">
+            <div id="addPlayerContainer">
+                <h2 id="addPlayerLabel">
+                    <b><u>Add Player:</u></b>
+                </h2>
+
+                <div id="playerNameInputBox">
+
+                    <p id="playerNameLabel">
+                        <b>Player name:</b>
+                    </p>
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Enter your name..." name="name" id="text" maxlength="25">
+                        <input id="playerNameInputField" onkeyup="handleInputField()" type="text" class="form-control" placeholder="Enter your name..." name="name" id="text" maxlength="25">
                         <div class="input-group-append">
-                            <button id="submitButton" type="submit" class="btn btn-dark">
+                            <button id="submitButton" onclick="handleAddButton()" type="submit" class="btn btn-dark">
                                 <b>Add</b>
                             </button>
                         </div>
                     </div>
-                </form>
+                </div>
+            </div>
+
+            <div id="gameRulesContainer">
+                <a href="http://localhost:9000/about">
+                    <button id="rulesButton" class="btn btn-dark">
+                        <b>Rules</b>
+                    </button>
+                </a>
+            </div>
+
+            <div id="startGameContainer">
+                <a href="http://localhost:9000/newGame">
+                    <button id="startGameButton" class="btn btn-dark">
+                        <b>START GAME</b>
+                    </button>
+                </a>
+            </div>
+
+            <div id="connectedPlayersContainer">
+                <p>Connected players:</p>
+                <div>
+                    <p id="connectedPlayersParagraph">
+                        @for((player, i) <- connectedPlayers.zipWithIndex) {
+                            @println(i, connectedPlayersSize)
+                            @if(connectedPlayersSize > i + 1) {
+                                @{player.name + ", "}
+                            } else  {
+                                @{player.name}
+                            }
+                        }
+                    </p>
+                </div>
+            </div>
+
+            <div id="infoTextContainer">
+                <p id="infoText"><b>
+                    Es müssen mindestens zwei Spieler hinzugefügt werden, bevor ein Spiel gestartet werden kann!</b></p>
             </div>
         </div>
 
-        <div id="gameRulesContainer">
-            <a href="http://localhost:9000/about">
-                <button id="rulesButton" class="btn btn-dark">
-                    <b>Rules</b>
-                </button>
-            </a>
-        </div>
-
-        <div id="startGameContainer">
-            <a href="http://localhost:9000/newGame">
-                <button id="startGameButton" class="btn btn-dark">
-                    <b>START GAME</b>
-                </button>
-            </a>
-        </div>
-
-        <div id="infoTextContainer">
-            <p id="infoText"><b>
-                Es müssen mindestens zwei Spieler hinzugefügt werden, bevor ein Spiel gestartet werden kann!</b></p>
-        </div>
-    </div>
-}
+        <script src="@routes.Assets.versioned("javascripts/main.js")" ></script>
+    }

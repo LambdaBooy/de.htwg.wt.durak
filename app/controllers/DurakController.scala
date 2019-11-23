@@ -2,13 +2,18 @@ package controllers
 
 
 import de.htwg.se.durak.Durak
-import de.htwg.se.durak.controller.controllerComponent.{ControllerInterface, GameStatus}
+import de.htwg.se.durak.controller.controllerComponent.{CardsChangedEvent, ControllerInterface, GameStatus, NewGameEvent, NewPlayerEvent}
 import de.htwg.se.durak.model.cardComponent.cardBaseImpl.Card
 import de.htwg.se.durak.util.cardConverter.CardStringConverter
 import de.htwg.se.durak.util.customExceptions.IllegalTurnException
 import javax.inject._
+import play.api.libs.streams.ActorFlow
 import play.api.mvc._
-
+import akka.actor._
+import akka.stream.Materializer
+import java.util.UUID
+import scala.collection.mutable
+import scala.swing.Reactor
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -16,8 +21,13 @@ import scala.util.{Failure, Success, Try}
  * application's home page.
  */
 @Singleton
-class DurakController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class DurakController @Inject()(cc: ControllerComponents)(
+  implicit system: ActorSystem,
+  mat: Materializer) extends AbstractController(cc) {
+
   val gameController: ControllerInterface = Durak.controller
+  var cookieToUuid: mutable.Map[String, String] = mutable.Map()
+  var uuidToPlayer: mutable.Map[String, String] = mutable.Map()
 
   private val converter = CardStringConverter
 
@@ -28,15 +38,33 @@ class DurakController @Inject()(cc: ControllerComponents) extends AbstractContro
   def durak: Action[AnyContent] = Action {
     println(gameController.gameStatus)
     if (gameController.players.size < 2 || gameController.gameStatus == GameStatus.NEWPLAYER) {
-      Ok(views.html.mainMenu())
+      Ok(views.html.mainMenu(gameController))
     } else {
       Ok(views.html.durak(gameController))
     }
   }
 
   def addPlayer(name: String): Action[AnyContent] = Action {
-    gameController.newPlayer(name)
-    Redirect(routes.DurakController.durak())
+    Ok(gameController.newPlayer(name))
+  }
+
+  def check: Action[AnyContent] = Action {
+    implicit request => {
+      val cookie = request.cookies.get("PLAY_SESSION") match {
+        case Some(cookie) => cookie.value
+        case None => "This should not happen :'("
+      }
+
+      if (cookieToUuid.contains(cookie)) {
+        Ok("COOKIEALREADYEXISTS")
+      } else {
+        Ok("COOKIEISNOTPRESENT")
+      }
+    }
+  }
+
+  def getPlayers: Action[AnyContent] = Action {
+    Ok(gameController.players.mkString(" "))
   }
 
   def newGame: Action[AnyContent] = Action {
@@ -63,15 +91,13 @@ class DurakController @Inject()(cc: ControllerComponents) extends AbstractContro
   }
 
   def throwCardIn(input: String): Action[AnyContent] = Action {
-    val tokens = input.split(" ");
+    val tokens = input.split(" ")
     var result = "This should not happen :'("
-    try {
-      parseCards(tokens.toList) match {
-        case Success(cards) => result = gameController.throwCardIn(cards._1)
-        case Failure(ex) => System.err.println("Error while parsing cards: " + ex.getMessage)
-      }
-      Ok(result)
+    parseCards(tokens.toList) match {
+      case Success(cards) => result = gameController.throwCardIn(cards._1)
+      case Failure(ex) => System.err.println("Error while parsing cards: " + ex.getMessage)
     }
+    Ok(result)
   }
 
   def ok: Action[AnyContent] = Action {
@@ -79,16 +105,7 @@ class DurakController @Inject()(cc: ControllerComponents) extends AbstractContro
   }
 
   def take: Action[AnyContent] = Action {
-    Ok(gameController.takeCards());
-  }
-
-  def getNumberOfPlayers: Action[AnyContent] = Action {
-    Ok(gameController.players.size.toString)
-  }
-
-  def exit: Action[AnyContent] = Action {
-    gameController.exitGame()
-    Ok("Exit")
+    Ok(gameController.takeCards())
   }
 
   def parseCards(input: List[String]): Try[(Card, Option[Card])] = {
@@ -101,46 +118,115 @@ class DurakController @Inject()(cc: ControllerComponents) extends AbstractContro
   }
 
   def undo: Action[AnyContent] = Action {
-    Ok(gameController.undo());
+    Ok(gameController.undo())
   }
 
-  def getActivePlayer: Action[AnyContent] = Action {
-    Ok(gameController.game.active.name)
+  def gameToJson: Action[AnyContent] = Action {
+    Ok(gameController.toJson)
   }
 
-  def getAttacker: Action[AnyContent] = Action {
-    Ok(gameController.game.currentTurn.attacker.name)
+  def getPlayerRole: Action[AnyContent] = Action {
+    implicit request => {
+      val cookie = request.cookies.get("PLAY_SESSION") match {
+        case Some(cookie) => cookie.value
+        case None => "This should not happen :'("
+      }
+
+      val uuid = cookieToUuid(cookie)
+      val playerName = uuidToPlayer(uuid)
+
+      var res = "This should not happen :'("
+
+      if (playerName == gameController.game.currentTurn.attacker.name) {
+        res = "attacker"
+      } else if (playerName == gameController.game.currentTurn.victim.name) {
+        res = "defender"
+      } else {
+        if (gameController.game.players.size > 2) {
+          println("Not implemented yet!")
+        }
+      }
+      Ok(res)
+    }
   }
 
-  def getDefender: Action[AnyContent] = Action {
-    Ok(gameController.game.currentTurn.victim.name)
+  def getPlayerName: Action[AnyContent] = Action {
+    implicit request => {
+      val cookie = request.cookies.get("PLAY_SESSION") match {
+        case Some(cookie) => cookie.value
+        case None => "This should not happen :'("
+      }
+
+      val uuid = cookieToUuid(cookie)
+      Ok(uuidToPlayer(uuid))
+    }
   }
 
-  def getNeighbor: Action[AnyContent] = Action {
-    Ok(gameController.game.currentTurn.neighbour.name)
+  def gameStatus: Action[AnyContent] = Action {
+    Ok(gameController.gameStatus.toString)
   }
 
-  def getActivePlayerHandCards: Action[AnyContent] = Action {
-    Ok(gameController.game.active.handCards.toString)
+  def socket(playerName: Option[String]): WebSocket = WebSocket.accept[String, String] { request =>
+    ActorFlow.actorRef { out =>
+      println("Connect received")
+
+      val cookie = request.cookies.get("PLAY_SESSION") match {
+        case Some(c) => c.value
+        case None => "This shouldn't happen :'("
+      }
+
+      if (cookieToUuid.contains(cookie)) {
+        println("cookie: " + cookie + " is already present!")
+        val uuid = cookieToUuid(cookie)
+        val playerName = uuidToPlayer(uuid)
+
+        if (playerName == gameController.game.currentTurn.attacker.name) {
+          println("user: " + playerName + " is attacker")
+        } else if (playerName == gameController.game.currentTurn.victim.name) {
+          println("user: " + playerName + " is defender")
+        } else {
+          if (gameController.game.players.size > 2) {
+            println("Not implemented yet!")
+          }
+        }
+      } else {
+        println("cookie was not present. Adding it now ...")
+        val uuid = UUID.randomUUID.toString
+        cookieToUuid(cookie) = uuid
+
+        playerName match {
+          case Some(name) => uuidToPlayer(uuid) = name
+          case None => println("This shouldn't happen :'(")
+        }
+      }
+
+      DurakWebSocketActorFactory.create(out, request)
+    }
   }
 
-  def getAttackerHandCards: Action[AnyContent] = Action {
-    Ok(gameController.game.currentTurn.attacker.handCards.mkString(","))
+  object DurakWebSocketActorFactory {
+    def create(out: ActorRef, request: RequestHeader): Props = {
+      Props(new DurakWebSocketActor(out, request))
+    }
   }
 
-  def getDefenderHandCards: Action[AnyContent] = Action {
-    Ok(gameController.game.currentTurn.victim.handCards.mkString(","))
+  class DurakWebSocketActor(out: ActorRef, request: RequestHeader) extends Actor with Reactor {
+    listenTo(gameController)
+
+    def receive: PartialFunction[Any, Unit] = {
+      case msg: String =>
+        sendJsonToClient()
+    }
+
+    reactions += {
+      case _ =>
+        sendJsonToClient()
+    }
+
+    def sendJsonToClient(): Unit = {
+      println("Received event from Controller")
+      out ! gameController.toJson.toString
+    }
   }
 
-  def getAttackCards: Action[AnyContent] = Action {
-    Ok(gameController.game.currentTurn.attackCards.mkString(","))
-  }
-
-  def getBlockedCards: Action[AnyContent] = Action {
-    Ok(gameController.game.currentTurn.blockedBy.keys.mkString(","))
-  }
-
-  def getBlockingCards: Action[AnyContent] = Action {
-    Ok(gameController.game.currentTurn.blockedBy.values.mkString(","))
-  }
 }

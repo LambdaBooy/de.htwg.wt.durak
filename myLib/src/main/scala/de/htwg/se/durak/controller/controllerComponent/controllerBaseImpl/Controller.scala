@@ -14,6 +14,7 @@ import de.htwg.se.durak.model.playerComponent.PlayerInterface
 import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.durak.util.PlayCommand
 import de.htwg.se.durak.util.undoManager.UndoManager
+import play.api.libs.json.JsObject
 
 import scala.swing.Publisher
 
@@ -25,7 +26,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
   val injector: ScalaInjector = Guice.createInjector(new DurakModule)
   val fileIO: FileIOInterface = injector.instance[FileIOInterface]
 
-  def newPlayer(name: String): Unit = {
+  def newPlayer(name: String): String = {
     if (!players.toStream.collect({ case p => p.name }).contains(name) && name.nonEmpty) {
       players = Player(name, Nil) :: players
       gameStatus = NEWPLAYER
@@ -34,6 +35,8 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
       gameStatus = PLAYERALREADYPRESENT
       notifyUI(new PlayerAlreadyPresentException)
     }
+
+    gameStatus.toString
   }
 
   def resetPlayers(): Unit = {
@@ -227,4 +230,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
     System.exit(0)
   }
 
+  def toJson(): JsObject = {
+    fileIO.gameToJson(game)
+  }
 }

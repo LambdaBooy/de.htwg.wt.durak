@@ -106,7 +106,7 @@
         <div class="row">
             <div class="col"></div>
             <div class="col">
-                <p id="deckInfo"><b>Cards in Deck: @deckSize</b></p>
+                <p id="deckInfo">Cards in Deck: @deckSize</p>
             </div>
             <div class="col">
                 <p id="trumpCardLabel"><b>Trump Card:</b></p>
@@ -116,10 +116,11 @@
         <div class="row">
             <div class="col">
                 <div id="gameInfo">
-                    <p id="activePlayer" >Active: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@activePlayer</p>
-                    <p id="attackingPlayer" >Attacker: &nbsp;&nbsp;&nbsp;@attacker</p>
-                    <p id="defendingPlayer">Victim: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@defender</p>
-                    <p id="neighbor">Neighbor: &nbsp;&nbsp;@neighbor</p>
+                    <p id="playerName">Your name:</p>
+                    <p id="activePlayer">Active: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@activePlayer</p>
+                    <p id="attackingPlayer">Attacker: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@attacker</p>
+                    <p id="defendingPlayer">Victim: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@defender</p>
+                    <p id="neighbor">Neighbor: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@neighbor</p>
 
                 </div>
             </div>
@@ -128,7 +129,7 @@
                 <img id="trumpCard" class="cardImg" src=@{
                     routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(trumpCard)
                             + CardImgConverter.getCardValuePath(trumpCard))
-                } />
+                    }/>
             </div>
         </div>
 
@@ -195,15 +196,16 @@
             </div>
             <div id="handView" ondrop="handleHandCardsOnDrop(event)" class="col-md-5">
                 <div class="scrollmenu">
-                @for((card, i) <- handCards.zipWithIndex) {
-                    <img id=@("handCard" + i) draggable="true" ondragstart="handleCardOnDrag(event)" class="cardImg" src=@{
-                        routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
-                                + CardImgConverter.getCardValuePath(card))
-                    } />
-                }
+@*                @for((card, i) <- handCards.zipWithIndex) {*@
+@*                    <img id=@("handCard" + i) draggable="true" ondragstart="handleCardOnDrag(event)" class="cardImg" src=@{*@
+@*                        routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)*@
+@*                                + CardImgConverter.getCardValuePath(card))*@
+@*                    } />*@
+@*                }*@
                 </div>
             </div>
         </div>
     </div>
+
     <script src="@routes.Assets.versioned("javascripts/durak.js")" ></script>
 }

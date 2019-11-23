@@ -93,12 +93,16 @@ div.scrollmenu a:hover {
 }
 
 #gameInfo {
-    /*position: fixed;*/
     left: 15px;
     text-align: left;
     color: white;
     font-size: large;
     font-weight: bold;
+}
+
+#deckInfo {
+    font-weight: bold;
+    font-size: large;
 }
 
 #trumpCardLabel {
