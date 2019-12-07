@@ -102,6 +102,7 @@
 
     <link rel="stylesheet" type="text/css" href='@routes.Assets.versioned("stylesheets/durak.css")' />
     <div id="gameContainer" class="container-fluid">
+        <notification-toast id="toast"></notification-toast>
 
         <div class="row">
             <div class="col"></div>
@@ -126,22 +127,16 @@
             </div>
             <div class="col"></div>
             <div class="col" id="trumpCardBox">
-                <img id="trumpCard" class="cardImg" src=@{
+                <card-element id="trumpCard" src=@{
                     routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(trumpCard)
                             + CardImgConverter.getCardValuePath(trumpCard))
-                    }/>
+                }/>
             </div>
         </div>
 
         <div class="row">
             <div class="col">
                 <div id="attackCards" ondrop="handleHandCardsOnDrop(event)"  ondragover="enableDrop(event)" class="scrollmenu" >
-                    @for((card, i) <- attackCards.zipWithIndex) {
-                        <img id=@("attackCard" + i) class="cardImg" src=@{
-                            routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
-                                    + CardImgConverter.getCardValuePath(card))
-                        } />
-                    }
                 </div>
             </div>
         </div>
@@ -152,19 +147,9 @@
                     <div>
 
                         <div id="blockedCards">
-                        @for((card, i) <- blockedCards.zipWithIndex) {
-                            <img id=@("blockedCard" + i) class="cardImg" src=@{routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
-                                        + CardImgConverter.getCardValuePath(card))} />
-                            }
                         </div>
 
                         <div id="blockingCards">
-                        @for((card, i) <- blockingCards.zipWithIndex) {
-                            <img id=@("blockingCard" + i) class="cardImg" src=@{
-                                routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)
-                                        + CardImgConverter.getCardValuePath(card))
-                            } />
-                        }
                         </div>
                     </div>
                 </div>
@@ -196,16 +181,12 @@
             </div>
             <div id="handView" ondrop="handleHandCardsOnDrop(event)" class="col-md-5">
                 <div class="scrollmenu">
-@*                @for((card, i) <- handCards.zipWithIndex) {*@
-@*                    <img id=@("handCard" + i) draggable="true" ondragstart="handleCardOnDrag(event)" class="cardImg" src=@{*@
-@*                        routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(card)*@
-@*                                + CardImgConverter.getCardValuePath(card))*@
-@*                    } />*@
-@*                }*@
                 </div>
             </div>
         </div>
     </div>
 
     <script src="@routes.Assets.versioned("javascripts/durak.js")" ></script>
+    <script src="@routes.Assets.versioned("bower_components/webcomponentsjs/webcomponents-lite.js")"></script>
+    <link rel="import" href="@routes.Assets.versioned("bower_components/notification-toast/notification-toast.html")">
 }
