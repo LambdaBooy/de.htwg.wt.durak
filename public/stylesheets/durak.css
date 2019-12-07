@@ -226,13 +226,13 @@ body {
 }
 
 @media (max-width: 1632px) {
-    .cardImg {
+    .card-element {
         width: 85px;
     }
 }
 
 @media (max-width: 1561px) {
-    .cardImg {
+    .card-element {
         width: 80px;
     }
 }
