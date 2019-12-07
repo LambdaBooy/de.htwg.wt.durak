@@ -1,0 +1,22 @@
+{
+  "name": "durak",
+  "homepage": "https://github.com/LambdaBooy/de.htwg.wt.durak",
+  "authors": [
+    "Stephan Perren <stephan.perren@htwg-konstanz.de>"
+  ],
+  "description": "",
+  "main": "index.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "notification-toast": "~0.2.0",
+    "polymer": "^2.0.0"
+  }
+}
