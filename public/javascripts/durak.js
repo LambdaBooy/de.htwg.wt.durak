@@ -5,6 +5,7 @@ var activePlayer = undefined;
 var attacker = undefined;
 var defender = undefined;
 var neighbor = undefined;
+var cardsInDeck = undefined;
 
 var websocket = undefined;
 
@@ -17,12 +18,10 @@ function connectWebSocket() {
     websocket.setTimeout;
 
     websocket.onopen = function (event) {
-        console.log("Connected to Websocket");
         websocket.send("test");
     };
 
     websocket.onclose = function () {
-        console.log('Connection with Websocket Closed!');
         connectWebSocket();
     };
 
@@ -34,8 +33,6 @@ function connectWebSocket() {
     websocket.onmessage = function (event) {
         if (typeof event.data === "string") {
             let json = JSON.parse(event.data);
-
-            console.log(json)
 
             $.when($.ajax({
                 method: "GET",
@@ -57,7 +54,6 @@ function connectWebSocket() {
                     dataType: "html",
 
                     success: function (data) {
-                        console.log(data);
                         playerRole = data;
                     }
                 })).done(function () {
@@ -87,8 +83,10 @@ function connectWebSocket() {
                 neighborParagraph.innerText = "Neighbor: \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"
                     + neighbor;
 
+                cardsInDeck = json.game.deck.length;
+
                 let deckInfoParagraph = document.getElementById("deckInfo");
-                deckInfoParagraph.innerText = "Cards in Deck:";
+                deckInfoParagraph.innerText = "Cards in Deck: " + cardsInDeck;
 
                 let playersAsJson = json.game.players;
 
@@ -215,7 +213,14 @@ function playAsAttacker(draggedCard, cardValue, ev) {
 
         success: function (data) {
             if (data !== "CARDLAYED") {
-                alert("Bisch du dumm?");
+                var toast = document.getElementById('toast');
+                toast.show({
+                    notificationTitle: "Blyat",
+                    body: "Bisch du dumm?!",
+                    icon: "/assets/images/slav_squat.png"
+                });
+                var audio = new Audio("/assets/audios/blyat.mp3");
+                audio.play();
             }
         }
     });
@@ -223,21 +228,54 @@ function playAsAttacker(draggedCard, cardValue, ev) {
 
 function playAsDefender(draggedCard, cardValue, ev) {
     let otherCard = ev.target;
-    if (otherCard.tagName === "IMG" && otherCard.id !== "placeholder") {
+    if (otherCard.tagName === "CARD-ELEMENT" && otherCard.id !== "placeholder") {
         let otherCardValue = getCardValueFromSrc(otherCard.src);
         $.ajax({
             method: "GET",
             url: "play/" + cardValue + " " + otherCardValue,
-            dataType: "html"
+            dataType: "html",
+
+            success: function (data) {
+                if (data !== "CARDLAYED") {
+                    var toast = document.getElementById('toast');
+                    toast.show({
+                        notificationTitle: "Blyat",
+                        body: "Bisch du dumm?!",
+                        icon: "/assets/images/slav_squat.png"
+                    });
+                    var audio = new Audio("/assets/audios/blyat.mp3");
+                    audio.play();
+                }
+            }
         });
     } else if (otherCard.id === "placeholder") {
         $.ajax({
             method: "GET",
             url: "throwIn/" + cardValue,
-            dataType: "html"
+            dataType: "html",
+
+            success: function (data) {
+                if (data !== "CARDLAYED") {
+                    var toast = document.getElementById('toast');
+                    toast.show({
+                        notificationTitle: "Blyat",
+                        body: "Bisch du dumm?!",
+                        icon: "/assets/images/slav_squat.png"
+                    });
+                    var audio = new Audio("/assets/audios/blyat.mp3");
+                    audio.play();
+                }
+            }
         });
     } else {
-        alert("Bidde was? ¯\\_(ツ)_/¯ ")
+        var toast = document.getElementById('toast');
+        toast.show({
+            notificationTitle: "Blyat",
+            body: "Bidde was? ¯\\_(ツ)_/¯",
+            icon: "/assets/images/slav_squat.png"
+        });
+        var audio = new Audio("/assets/audios/blyat.mp3");
+        audio.play();
     }
 }
 
@@ -256,7 +294,7 @@ function playOk() {
 }
 
 function getCardValueFromSrc(srcName) {
-    let cardNameArr = srcName.slice(36).split(".")[0].split("_");
+    let cardNameArr = srcName.slice(15).split(".")[0].split("_");
     let typeDict = {
         "club": "Kreuz",
         "diamond": "Karo",
@@ -286,7 +324,7 @@ function showThrowInPlaceHolder() {
     let img = document.createElement('img');
     img.id = "placeholder";
     img.src = "/assets/images/placeholder.png";
-    img.style = "border: 2px solid";
+    img.style = "border: 2px solid; width: 85px; margin-top: -117px;";
     document.getElementById("attackCards").append(img);
 }
 
@@ -354,7 +392,14 @@ function takeCards() {
 
         success: function (data) {
             if (data !== "TAKE") {
-                alert("There are no cards to take!");
+                var toast = document.getElementById('toast');
+                toast.show({
+                    notificationTitle: "Blyat",
+                    body: "Bisch du dumm?!",
+                    icon: "/assets/images/slav_squat.png"
+                });
+                var audio = new Audio("/assets/audios/blyat.mp3");
+                audio.play();
             }
         }
     });
@@ -369,16 +414,19 @@ function undo() {
 }
 
 function createCard(id, cardSrcName) {
-    let cardImg = document.createElement('img');
-    cardImg.id = id;
-    cardImg.draggable = "true";
-    cardImg.className = "cardImg";
-    cardImg.src = "/assets/images/" + cardSrcName;
-    cardImg.addEventListener('dragstart', function (ev) {
-        ev.dataTransfer.setData("text", ev.target.id);
-    });
+    let cardElement = document.createElement('card-element');
+    cardElement.id = id;
+    if (activePlayer === playerName) {
+        cardElement.draggable = "true";
+    }
+    cardElement.src = "/assets/images/" + cardSrcName;
+    if (activePlayer === playerName) {
+        cardElement.addEventListener('dragstart', function (ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        });
+    }
 
-    return cardImg;
+    return cardElement;
 }
 
 function getCardSrcName(cardColor, cardValue) {
