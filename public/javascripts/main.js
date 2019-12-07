@@ -117,7 +117,8 @@ function update() {
 
             success: function (data) {
                 if (data === "NEW" || data === "CARDLAYED" || data === "OK") {
-                    location.reload();
+                    // location.reload();
+                    window.location.href = "/durakPolymer";
                 }
             }
         })).done(function () {
