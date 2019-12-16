@@ -81,12 +81,6 @@ function connectWebSocket() {
     websocket.onerror = function (error) {
         console.log('Error in Websocket Occured: ' + error);
     };
-
-    websocket.onmessage = function (e) {
-        if (typeof e.data === "string") {
-            console.log(e.data)
-        }
-    }
 }
 
 function update() {
@@ -118,7 +112,7 @@ function update() {
             success: function (data) {
                 if (data === "NEW" || data === "CARDLAYED" || data === "OK") {
                     // location.reload();
-                    window.location.href = "/durakPolymer";
+                    window.location.href = "/durakVue";
                 }
             }
         })).done(function () {
