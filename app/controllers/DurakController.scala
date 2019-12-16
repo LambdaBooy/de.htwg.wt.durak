@@ -73,7 +73,8 @@ class DurakController @Inject()(cc: ControllerComponents)(
     } else {
       gameController.newGame()
       // Redirect(routes.DurakController.durak())
-      Redirect(routes.DurakController.durakPolymer())
+      // Redirect(routes.DurakController.durakPolymer())
+      Redirect(routes.DurakController.durakVue())
     }
   }
 
@@ -207,6 +208,10 @@ class DurakController @Inject()(cc: ControllerComponents)(
 
   def durakPolymer(): Action[AnyContent] = Action {
     Ok(views.html.durakPolymer())
+  }
+
+  def durakVue(): Action[AnyContent] = Action {
+    Ok(views.html.durakVue())
   }
 
   object DurakWebSocketActorFactory {
