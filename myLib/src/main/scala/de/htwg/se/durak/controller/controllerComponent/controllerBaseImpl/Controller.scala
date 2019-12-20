@@ -1,6 +1,6 @@
 package de.htwg.se.durak.controller.controllerComponent.controllerBaseImpl
 
-import com.google.inject.{Guice, Inject}
+import com.google.inject.{ Guice, Inject }
 import net.codingwell.scalaguice.InjectorExtensions._
 import de.htwg.se.durak.DurakModule
 import de.htwg.se.durak.controller.controllerComponent.GameStatus._
@@ -18,7 +18,7 @@ import play.api.libs.json.JsObject
 
 import scala.swing.Publisher
 
-class Controller @Inject()(var game: GameInterface) extends ControllerInterface with Publisher {
+class Controller @Inject() (var game: GameInterface) extends ControllerInterface with Publisher {
 
   var gameStatus: GameStatus = IDLE
   var players: List[PlayerInterface] = Nil
@@ -45,7 +45,6 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
     publish(new ResetPlayersEvent)
   }
 
-
   def newGame(): Unit = {
     if (players.size > 1) {
       game = new Game(players).start()
@@ -64,8 +63,7 @@ class Controller @Inject()(var game: GameInterface) extends ControllerInterface 
         gameStatus = CARDLAYED
         publish(new CardsChangedEvent)
       }
-    }
-    catch {
+    } catch {
       case iTE: IllegalTurnException =>
         gameStatus = ILLEGALTURN
         notifyUI(iTE)

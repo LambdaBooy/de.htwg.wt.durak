@@ -13,8 +13,10 @@ class Card extends LitElement {
             super.styles,
             css`
                 img { 
-                    width: 80px; 
-                    margin: 10px; 
+                    width: 90px; 
+                    margin-top: 5px; 
+                    margin-right: 5px;
+                    margin-left: 5px;
                 }`];
     }
 

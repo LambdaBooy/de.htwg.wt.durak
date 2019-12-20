@@ -1,6 +1,16 @@
 @import de.htwg.se.durak.util.cardConverter._
 @import de.htwg.se.durak.model.cardComponent.CardInterface
-@(controller: de.htwg.se.durak.controller.controllerComponent.ControllerInterface)
+@import play.api.i18n.Messages
+@import play.api.mvc.RequestHeader
+@import org.webjars.play.WebJarsUtil
+@import controllers.AssetsFinder
+@import play.api.data._
+@import forms.TotpSetupForm.Data
+@import com.mohiva.play.silhouette.impl.providers.GoogleTotpCredentials
+@import com.mohiva.play.silhouette.impl.providers.GoogleTotpInfo
+
+@(controller: de.htwg.se.durak.controller.controllerComponent.ControllerInterface, user: models.User, totpInfoOpt: Option[GoogleTotpInfo], totpDataOpt: Option[(Form[Data], GoogleTotpCredentials)] = None)(implicit request: RequestHeader,
+        messages: Messages, webJarsUtil: WebJarsUtil, assets: AssetsFinder)
 
 @counter = @{
     0
@@ -99,23 +109,17 @@
 
 
 @main("HTWG Durak") {
-
-    <link rel="stylesheet" type="text/css" href='@routes.Assets.versioned("stylesheets/durak.css")' />
     <div id="gameContainer" class="container-fluid">
         <notification-toast id="toast"></notification-toast>
 
         <div class="row">
-            <div class="col"></div>
-            <div class="col">
+            <div class="col-xs-12">
                 <p id="deckInfo">Cards in Deck: @deckSize</p>
-            </div>
-            <div class="col">
-                <p id="trumpCardLabel"><b>Trump Card:</b></p>
             </div>
         </div>
 
         <div class="row">
-            <div class="col">
+            <div class="col-xs-6">
                 <div id="gameInfo">
                     <p id="playerName">Your name:</p>
                     <p id="activePlayer">Active: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@activePlayer</p>
@@ -125,12 +129,10 @@
 
                 </div>
             </div>
-            <div class="col"></div>
-            <div class="col" id="trumpCardBox">
-                <card-element id="trumpCard" src=@{
-                    routes.Assets.versioned("images/" + CardImgConverter.getCardColorPath(trumpCard)
-                            + CardImgConverter.getCardValuePath(trumpCard))
-                }/>
+            <div class="col-xs-6">
+                <p id="trumpCardLabel"><b>Trump Card:</b></p>
+                <div id="trumpCardBox">
+                </div>
             </div>
         </div>
 
@@ -158,35 +160,39 @@
 
         <div class="row" id="handViewContainer">
             <div class="col-md-auto">
+                <div>
                 <div id="leftButtonsContainer">
                     <div>
-                        <button id="okayButton" class="btn btn-dark" type="button" onclick="playOk()">
+                        <button id="okayButton" class="btn btn-primary" type="button" onclick="playOk()">
                             <b>OKAY</b>
-                            <img id="thumpUpImg" src=@routes.Assets.versioned("images/thump_up.png")>
+                            <img id="thumpUpImg" src=@assets.path("images/thump_up.png")>
                         </button>
                     </div>
                     <div>
-                        <button id="takeButton" onclick="takeCards()" class="btn btn-dark">
+                        <button id="takeButton" onclick="takeCards()" class="btn btn-primary">
                             <b>TAKE</b>
-                            <img id="poopImg" src=@routes.Assets.versioned("images/poop.png")>
+                            <img id="poopImg" src=@assets.path("images/poop.png")>
                         </button>
                     </div>
                     <div>
-                        <button id="undoButton" class="btn btn-dark" onclick="undo()" type="button">
+                        <button id="undoButton" class="btn btn-primary" onclick="undo()" type="button">
                             <b>UNDO</b>
-                            <img id="undoArrowImg" src=@routes.Assets.versioned("images/undo_arrow.png")>
+                            <img id="undoArrowImg" src=@assets.path("images/undo_arrow.png")>
                         </button>
                     </div>
                 </div>
-            </div>
-            <div id="handView" ondrop="handleHandCardsOnDrop(event)" class="col-md-5">
-                <div class="scrollmenu">
+
+                <div id="handView" ondrop="handleHandCardsOnDrop(event)">
+                    <div class="scrollmenu">
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="@routes.Assets.versioned("javascripts/durak.js")" ></script>
-    <script src="@routes.Assets.versioned("bower_components/webcomponentsjs/webcomponents-lite.js")"></script>
-    <link rel="import" href="@routes.Assets.versioned("bower_components/notification-toast/notification-toast.html")">
+    <link rel="stylesheet" type="text/css" href='@assets.path("stylesheets/durak.css")' />
+    <script src="@assets.path("javascripts/durak.js")" ></script>
+    <script src="@assets.path("bower_components/webcomponentsjs/webcomponents-lite.js")"></script>
+    <link rel="import" href="@assets.path("bower_components/notification-toast/notification-toast.html")">
 }

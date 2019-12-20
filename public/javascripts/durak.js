@@ -14,7 +14,7 @@ $(function () {
 });
 
 function connectWebSocket() {
-    websocket = new WebSocket("ws://localhost:9000/websocket");
+    websocket = new WebSocket("ws://localhost:9000/durakWebsocket");
     websocket.setTimeout;
 
     websocket.onopen = function (event) {
@@ -27,42 +27,39 @@ function connectWebSocket() {
 
     websocket.onerror = function (error) {
         console.log('Error in Websocket Occured: ' + error);
-        connectWebSocket();
     };
 
     websocket.onmessage = function (event) {
         if (typeof event.data === "string") {
             let json = JSON.parse(event.data);
 
-            $.when($.ajax({
+            $.ajax({
                 method: "GET",
-                url: "/playerName",
+                url: "/playerRole",
                 dataType: "html",
 
                 success: function (data) {
-                    playerName = data;
-                    document.getElementById("playerName").innerText = "Your name:  \u00A0\u00A0\u00A0\u00A0" +
-                        "\u00A0\u00A0\u00A0" + data
+                    playerRole = data;
                 }
-            })).done(function () {
-
-                activePlayer = json.game.active.player.name;
-
-                $.when($.ajax({
+            }).then(function () {
+                return $.ajax({
                     method: "GET",
-                    url: "/playerRole",
+                    url: "/clientName",
                     dataType: "html",
 
                     success: function (data) {
-                        playerRole = data;
+                        playerName = data;
                     }
-                })).done(function () {
-                    updateComponents();
-                });
+                })
+            }).done(function () {
+                let playerNameParagraph = document.getElementById("playerName").innerText = "Your name:  " +
+                    "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + playerName
+
+                activePlayer = json.game.active.player.name;
 
                 let activePlayerParagraph = document.getElementById("activePlayer");
                 activePlayerParagraph.innerText = "Active: \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" +
-                    "\u00A0\u00A0\u00A0\u00A0" + activePlayer;
+                    "\u00A0\u00A0\u00A0\u00A0\u00A0" + activePlayer;
 
 
                 attacker = json.game.currentTurn.attacker.player.name;
@@ -75,7 +72,7 @@ function connectWebSocket() {
 
                 let defendingPlayerParagraph = document.getElementById("defendingPlayer");
                 defendingPlayerParagraph.innerText = "Victim: \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" +
-                    "\u00A0\u00A0\u00A0\u00A0" + defender;
+                    "\u00A0\u00A0\u00A0\u00A0\u00A0" + defender;
 
                 neighbor = json.game.currentTurn.neighbour.player.name;
 
@@ -87,6 +84,16 @@ function connectWebSocket() {
 
                 let deckInfoParagraph = document.getElementById("deckInfo");
                 deckInfoParagraph.innerText = "Cards in Deck: " + cardsInDeck;
+
+                let trumpCardAsJson = json.game.trump.card;
+
+                let trumpCardElement = document.getElementById("trumpCardBox");
+
+                let trumpCardSrcName = getCardSrcName(trumpCardAsJson.color, trumpCardAsJson.value);
+                let trumpCardImg = createCard("trumpCard", trumpCardSrcName);
+
+                trumpCardElement.innerHTML = "";
+                trumpCardElement.appendChild(trumpCardImg);
 
                 let playersAsJson = json.game.players;
 
@@ -151,6 +158,8 @@ function connectWebSocket() {
                     let blockingCard = createCard("blockingCard" + blockingCardsSize, blockingCardSrcName);
                     blockingCardsElement.append(blockingCard);
                 });
+
+                updateComponents();
             })
         }
     }
@@ -228,7 +237,7 @@ function playAsAttacker(draggedCard, cardValue, ev) {
 
 function playAsDefender(draggedCard, cardValue, ev) {
     let otherCard = ev.target;
-    if (otherCard.tagName === "CARD-ELEMENT" && otherCard.id !== "placeholder") {
+    if (otherCard.tagName === "IMG" && otherCard.id !== "placeholder") {
         let otherCardValue = getCardValueFromSrc(otherCard.src);
         $.ajax({
             method: "GET",
@@ -294,7 +303,8 @@ function playOk() {
 }
 
 function getCardValueFromSrc(srcName) {
-    let cardNameArr = srcName.slice(15).split(".")[0].split("_");
+    let cardNameArr = srcName.substring(srcName.lastIndexOf('/') + 1).split(".")[0].split("_");
+
     let typeDict = {
         "club": "Kreuz",
         "diamond": "Karo",
@@ -324,7 +334,7 @@ function showThrowInPlaceHolder() {
     let img = document.createElement('img');
     img.id = "placeholder";
     img.src = "/assets/images/placeholder.png";
-    img.style = "border: 2px solid; width: 85px; margin-top: -117px;";
+    img.style = "border: 2px solid; width: 85px;";
     document.getElementById("attackCards").append(img);
 }
 
@@ -334,6 +344,8 @@ function enableDrop(ev) {
 
 function disableCardDragAndDrop() {
     let cards = document.getElementById("handView").children[0].children;
+
+    console.log(cards)
 
     for (i = 0; i < cards.length; i++) {
         cards[i].setAttribute("draggable", "false");
@@ -414,8 +426,9 @@ function undo() {
 }
 
 function createCard(id, cardSrcName) {
-    let cardElement = document.createElement('card-element');
+    let cardElement = document.createElement('img');
     cardElement.id = id;
+    cardElement.className = "cardImg";
     if (activePlayer === playerName) {
         cardElement.draggable = "true";
     }

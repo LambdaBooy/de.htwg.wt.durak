@@ -1,0 +1,229 @@
+@import play.api.i18n.Messages
+@import play.api.mvc.RequestHeader
+@import org.webjars.play.WebJarsUtil
+@import controllers.AssetsFinder
+@import play.api.data._
+@import forms.TotpSetupForm.Data
+@import com.mohiva.play.silhouette.impl.providers.GoogleTotpCredentials
+@import com.mohiva.play.silhouette.impl.providers.GoogleTotpInfo
+
+@(user: models.User, totpInfoOpt: Option[GoogleTotpInfo], totpDataOpt: Option[(Form[Data], GoogleTotpCredentials)] = None)(implicit request: RequestHeader,
+        messages: Messages, webJarsUtil: WebJarsUtil, assets: AssetsFinder)
+
+@implicitFieldConstructor = @{
+    b3.vertical.fieldConstructor()
+}
+
+@main("HTWG Durak") {
+    <link rel="stylesheet" type="text/css" href='@assets.path("stylesheets/about.css")'/>
+    <div id="aboutContainer">
+
+        <div id="durakImgContainer">
+            <img id="durakImg" src=@assets.path("images/durak.jpg")>
+        </div>
+
+        <div id="generalInformationContainer">
+            <h2 id="generalInformationLabel">
+                <b><u>Allgemeines:</u></b>
+                <img id="infoIcon" src=@assets.path("images/info.png")>
+            </h2>
+
+            <p id="generalInformationContent">
+                <b>
+                    Durak ist ein russisches Kartenspiel. Ziel des Spiels ist es, nach aufgebrauchtem Deck möglichst schnell alle Karten
+                    loszuwerden. <br>
+                    Als Durak („Dummkopf“) wird derjenige Spieler bezeichnet, der als letzter Karten auf der Hand hat. <br>
+                    Derjenige, der zuerst keine Karten mehr hat, gewinnt. <br>
+                    Die Runde wird jedoch fortgesetzt mit den restlichen Spielern,
+                    die um den zweiten, dritten und vierten Platz spielen.
+                </b>
+            </p>
+        </div>
+
+        <div id="preparationContainer">
+            <h2 id="preparationLabel">
+                <b><u>Vorbereitung:</u></b>
+                <img id="preparationIcon" src=@assets.path("images/preparation.png")>
+            </h2>
+
+            <p id="preparationContent">
+                <b>
+                    Anzahl Karten im Deck: &emsp;&emsp;&emsp;52<br>
+                    Maximale Anzahl Spieler: &emsp;&emsp;&nbsp;10<br><br>
+
+                    Zu beginn erhält jeder Spieler 5 Handkarten.
+                </b>
+            </p>
+        </div>
+
+        <div id="cardsContainer">
+            <h2 id="cardsLabel">
+                <b><u>Karten:</u></b>
+                <img id="cardIcon" src=@assets.path("images/cards.png")>
+            </h2>
+
+            <p id="cardsContent">
+                <b>Die Spielkarten, geordnet von der niedrigsten Wertigkeit zur höchsten Wertigkeit:</b>
+            </p>
+
+            <div id="cardsList">
+                <div id="heartCardsList">
+                    <img id="card" src=@assets.path("images/heart_2.png")>
+                    <img id="card" src=@assets.path("images/heart_3.png")>
+                    <img id="card" src=@assets.path("images/heart_4.png")>
+                    <img id="card" src=@assets.path("images/heart_5.png")>
+                    <img id="card" src=@assets.path("images/heart_6.png")>
+                    <img id="card" src=@assets.path("images/heart_7.png")>
+                    <img id="card" src=@assets.path("images/heart_8.png")>
+                    <img id="card" src=@assets.path("images/heart_9.png")>
+                    <img id="card" src=@assets.path("images/heart_jack.png")>
+                    <img id="card" src=@assets.path("images/heart_queen.png")>
+                    <img id="card" src=@assets.path("images/heart_king.png")>
+                    <img id="card" src=@assets.path("images/heart_10.png")>
+                    <img id="card" src=@assets.path("images/heart_1.png")>
+                </div>
+                <div id="clubCardsList">
+                    <img id="card" src=@assets.path("images/club_2.png")>
+                    <img id="card" src=@assets.path("images/club_3.png")>
+                    <img id="card" src=@assets.path("images/club_4.png")>
+                    <img id="card" src=@assets.path("images/club_5.png")>
+                    <img id="card" src=@assets.path("images/club_6.png")>
+                    <img id="card" src=@assets.path("images/club_7.png")>
+                    <img id="card" src=@assets.path("images/club_8.png")>
+                    <img id="card" src=@assets.path("images/club_9.png")>
+                    <img id="card" src=@assets.path("images/club_jack.png")>
+                    <img id="card" src=@assets.path("images/club_queen.png")>
+                    <img id="card" src=@assets.path("images/club_king.png")>
+                    <img id="card" src=@assets.path("images/club_10.png")>
+                    <img id="card" src=@assets.path("images/club_1.png")>
+                </div>
+                <div id="diamondCardsList">
+                    <img id="card" src=@assets.path("images/diamond_2.png")>
+                    <img id="card" src=@assets.path("images/diamond_3.png")>
+                    <img id="card" src=@assets.path("images/diamond_4.png")>
+                    <img id="card" src=@assets.path("images/diamond_5.png")>
+                    <img id="card" src=@assets.path("images/diamond_6.png")>
+                    <img id="card" src=@assets.path("images/diamond_7.png")>
+                    <img id="card" src=@assets.path("images/diamond_8.png")>
+                    <img id="card" src=@assets.path("images/diamond_9.png")>
+                    <img id="card" src=@assets.path("images/diamond_jack.png")>
+                    <img id="card" src=@assets.path("images/diamond_queen.png")>
+                    <img id="card" src=@assets.path("images/diamond_king.png")>
+                    <img id="card" src=@assets.path("images/diamond_10.png")>
+                    <img id="card" src=@assets.path("images/diamond_1.png")>
+                </div>
+                <div id="spadeCardsList">
+                    <img id="card" src=@assets.path("images/spade_2.png")>
+                    <img id="card" src=@assets.path("images/spade_3.png")>
+                    <img id="card" src=@assets.path("images/spade_4.png")>
+                    <img id="card" src=@assets.path("images/spade_5.png")>
+                    <img id="card" src=@assets.path("images/spade_6.png")>
+                    <img id="card" src=@assets.path("images/spade_7.png")>
+                    <img id="card" src=@assets.path("images/spade_8.png")>
+                    <img id="card" src=@assets.path("images/spade_9.png")>
+                    <img id="card" src=@assets.path("images/spade_jack.png")>
+                    <img id="card" src=@assets.path("images/spade_queen.png")>
+                    <img id="card" src=@assets.path("images/spade_king.png")>
+                    <img id="card" src=@assets.path("images/spade_10.png")>
+                    <img id="card" src=@assets.path("images/spade_1.png")>
+                </div>
+            </div>
+        </div>
+
+        <div id="trumpCardContainer">
+            <h2 id="trumpCardLabel">
+                <b><u>Trumpfkarte:</u></b>
+                <img id="trumpCardIcon" src=@assets.path("images/trumpCard.png")>
+            </h2>
+
+            <p id="trumpCardContent">
+                <b>
+                    Zu Beginn des Spiels wird eine Trumpfkarte festgelegt (die letzte Karte des Stapels).<br>
+                    Die Farbe dieser Karte legt die Trumpffarbe fest, d.h. alle Karten mit dieser Farbe sind nun Trupfkarten.<br>
+                    Die soebenen festgelegte Trumpfkarte ist für alle Spielteilnehmer sichtbar und kann auch aufgezogen werden.<br><br>
+
+                    Eine Trumpfkarte kann jede "normale" Karte decken.<br>
+                    Eine Trumpfkarte kann mit einer anderen Trumpfkarte mit höherer Wertigkeit gedeckt werden.
+                </b>
+            </p>
+        </div>
+
+        <div id="attackContainer">
+            <h2 id="attackLabel">
+                <b><u>Angriff:</u></b>
+                <img id="swordsImg" src=@assets.path("images/swords.png")>
+            </h2>
+
+            <p id="attackContent">
+                <b>
+                    Ein Angreifer darf beliebig viele Karten der gleichen Wertigkeit legen um den Verteidiger anzugreifen, solange dieser
+                    genügend Karten auf der Hand hat um den Angriff abzuwehren.
+                </b>
+            </p>
+        </div>
+
+        <div id="defenceContainer">
+            <h2 id="defenceLabel">
+                <b><u>Verteidigen:</u></b>
+                <img id="shieldImg" src=@assets.path("images/shield.png")>
+            </h2>
+
+            <p id="defenceContent">
+                <b>
+                    Ein Verteidiger muss alle ungedeckten Karten auf dem Spielfeld decken und zwar solange bis beide Nachbarn zufrieden
+                    sind und nichts mehr dazuwerfen möchten.<br>
+                    Eine auf dem Spielfeld liegende Karte kann nur mit der selben Farbe und einer höheren Wertigkeit gedeckt werden.<br>
+                    Trumpfkarten sind hiervon ausgenommen.<br><br>
+
+                    Ein Verteidiger hat auch die Möglichkeit einen Angriff weiter zu schieben, indem er eine Karte einer anderen Farbe
+                    der selben Wertigkeit wie die auf dem Spielfeld liegenden Karten dazu wirft.<br>
+                    Dadurch greift nun der ursprüngliche Verteidiger den Spieler zu seiner linken an.<br>
+                    Dies ist jedoch nur möglich, solange der Verteidiger noch keine der Angriffskarten gedeckt hat und der Spieler zu seiner linken noch genügend
+                    Handkarten besitzt, um den Angriff abzuwehren.
+                </b>
+            </p>
+        </div>
+
+        <div id="matchStatusContainer">
+            <h2 id="matchStatusLabel">
+                <b><u>Spielverlauf:</u></b>
+                <img id="diceIcon" src=@assets.path("images/dice.png")>
+            </h2>
+
+            <p id="matchStatusContent">
+                <b>
+                    Ein zufällig ausgewählter Spieler darf beginnen.<br><br>
+
+                    Es wird rundenweiße im Uhrzeigersinn gespielt.<br>
+                    Eine Runde beginnt mit dem Angriff des Angreifers, welcher den Spieler
+                    zu seiner linken (den Verteidiger) angreifen darf.<br>
+                    Der Verteidiger muss nun die vom Angreifer gelegten Karten decken ("abwehren").<br><br>
+
+                    Gelingt es dem Verteidiger den Angriff abzuwehren, dürfen beide Nachbarn des Verteidigers weitere Karten dazu werfen.<br>
+                    Es können jedoch nur Karten dazugeworfen werden, welche die selbe Wertigkeit besitzen, wie einer der bereits auf dem
+                    Spielfeld liegenden Karten.<br>
+                    Die dazugeworfenen Karten muss der Verteidiger nun ebenfalls decken, wodurch der Zyklus
+                    wieder von vorne beginnt.<br>
+                    Dies wird solange wiederholt, bis beide Nachbarn des Verteidigers zufrieden sind, also
+                    keine Karten mehr dazu werfen möchten.<br><br>
+
+                    Schafft es der Verteidiger nicht, den Angriff erfolgreich abzuwehren, so muss dieser alle Karten die beim Angriff
+                    gelegt wurden aufnehmen.<br>
+                    Danach ist der Spieler zu seiner linken an der Reihe anzugreifen.<br><br>
+
+                    Sobald ein Spieler einen Zug an einen anderen Spieler übergibt, muss dieser so viele Karten vom Stapel aufziehen, bis
+                    er wieder 5 Karten auf der Hand hat.<br><br>
+
+                    Der Spieler, welcher als erstes keine Handkarten mehr besitzt, gewinnt das Spiel.<br><br>
+
+                    Das Spiel wird solange weitergespielt, bis es nur noch einen Spieler gibt, der als einziger noch Handkarten besitzt.<br>
+                    Derjenige ist dann der Verlierer.
+                </b>
+            </p>
+        </div>
+
+        <div id="funAheadImgContainer">
+            <img id="funAheadImg" src=@assets.path("images/fun_ahead.gif")>
+        </div>
+    </div>
+}

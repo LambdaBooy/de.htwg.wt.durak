@@ -2,7 +2,7 @@ import {LitElement, html, css} from "https://unpkg.com/@polymer/lit-element@late
 
 document.body.style.background = "green";
 
-var playerName = undefined;
+var clientName = undefined;
 var playerRole = undefined;
 
 var activePlayer = undefined;
@@ -20,30 +20,30 @@ $(function () {
 
 function setUpEventListeners() {
     let attackCardsElement = document.getElementsByTagName("durak-app")[0].shadowRoot.getElementById("attackCards");
-    attackCardsElement.ondragover = function(event) {
+    attackCardsElement.ondragover = function (event) {
         enableDrop(event)
     };
-    attackCardsElement.ondrop = function(event) {
+    attackCardsElement.ondrop = function (event) {
         handleHandCardsOnDrop(event)
     };
 
     let handViewElement = document.getElementsByTagName("durak-app")[0].shadowRoot.getElementById("handView");
-    handViewElement.ondrop = function(event) {
+    handViewElement.ondrop = function (event) {
         handleHandCardsOnDrop(event)
     };
 
     let undoButtonElement = document.getElementsByTagName("durak-app")[0].shadowRoot.getElementById("undoButton");
-    undoButtonElement.onclick = function() {
+    undoButtonElement.onclick = function () {
         undo();
     };
 
     let takeButtonElement = document.getElementsByTagName("durak-app")[0].shadowRoot.getElementById("takeButton");
-    takeButtonElement.onclick = function() {
+    takeButtonElement.onclick = function () {
         takeCards();
     };
 
     let okayButtonElement = document.getElementsByTagName("durak-app")[0].shadowRoot.getElementById("okayButton");
-    okayButtonElement.onclick = function() {
+    okayButtonElement.onclick = function () {
         playOk();
     }
 }
@@ -53,7 +53,7 @@ function enableDrop(ev) {
 }
 
 function connectWebSocket() {
-    websocket = new WebSocket("ws://localhost:9000/websocket");
+    websocket = new WebSocket("ws://localhost:9000/durakWebsocket");
     websocket.setTimeout;
 
     websocket.onopen = function (event) {
@@ -72,22 +72,16 @@ function connectWebSocket() {
         if (typeof event.data === "string") {
             let json = JSON.parse(event.data);
 
-            $.when($.ajax({
+            $.ajax({
                 method: "GET",
-                url: "/playerName",
+                url: "/clientName",
                 dataType: "html",
 
                 success: function (data) {
-                    console.log(data)
-                    playerName = data;
-                    document.getElementsByTagName("durak-app")[0].shadowRoot.getElementById("playerName").innerText = "Your name:  \u00A0\u00A0\u00A0\u00A0" +
-                        "\u00A0\u00A0\u00A0" + data
+                    clientName = data;
                 }
-            })).done(function () {
-
-                activePlayer = json.game.active.player.name;
-
-                $.when($.ajax({
+            }).then(function () {
+                return $.ajax({
                     method: "GET",
                     url: "/playerRole",
                     dataType: "html",
@@ -95,9 +89,12 @@ function connectWebSocket() {
                     success: function (data) {
                         playerRole = data;
                     }
-                })).done(function () {
-                    updateComponents();
-                });
+                })
+            }).done(function () {
+                activePlayer = json.game.active.player.name;
+
+                let playerNameParagraph = document.getElementsByTagName("durak-app")[0].shadowRoot.getElementById("playerName");
+                playerNameParagraph.innerText = "Your name:  \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + clientName
 
                 let activePlayerParagraph = document.getElementsByTagName("durak-app")[0].shadowRoot.getElementById("activePlayer");
                 activePlayerParagraph.innerText = "Active: \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" +
@@ -137,7 +134,6 @@ function connectWebSocket() {
                 let cardSrcName = getCardSrcName(trumpCardColor, trumpCardValue);
                 let trumpCardImg = createCard("trumpCard", cardSrcName);
                 trumpCardElement.appendChild(trumpCardImg);
-
                 let handCardsElement = document.getElementsByTagName("durak-app")[0].shadowRoot.getElementById("handView").children[0];
                 handCardsElement.innerHTML = "";
 
@@ -146,7 +142,7 @@ function connectWebSocket() {
                 for (i = 0; i < playersAsJson.length; i++) {
                     let player = playersAsJson[i].player;
 
-                    if (player.name === playerName) {
+                    if (player.name === clientName) {
                         player.handCards.forEach(cardObj => {
                             let cardColor = cardObj.card.color;
                             let cardValue = cardObj.card.value;
@@ -200,14 +196,16 @@ function connectWebSocket() {
                     let blockingCard = createCard("blockingCard" + blockingCardsSize, blockingCardSrcName);
                     blockingCardsElement.append(blockingCard);
                 });
-            })
+
+                updateComponents();
+            });
         }
     }
 }
 
 function updateComponents() {
     if (playerRole === "defender") {
-        if (activePlayer === playerName) {
+        if (activePlayer === clientName) {
             enableCardDragAndDrop();
             enableUndoButton();
             enableTakeButton();
@@ -226,7 +224,7 @@ function updateComponents() {
 
         disableOkButton();
     } else {
-        if (activePlayer === playerName) {
+        if (activePlayer === clientName) {
             enableCardDragAndDrop();
             enableUndoButton();
             enableTakeButton();
@@ -380,16 +378,13 @@ function showThrowInPlaceHolder() {
 
 function disableCardDragAndDrop() {
     let cards = document.getElementsByTagName("durak-app")[0].shadowRoot.getElementById("handView").children[0].children;
-
+    console.log(cards)
     let i = 0;
     for (i = 0; i < cards.length; i++) {
         cards[i].setAttribute("draggable", "false");
     }
+    console.log(cards)
 }
-
-// function enableDrop(ev) {
-//     ev.preventDefault();
-// }
 
 function enableCardDragAndDrop() {
     let cards = document.getElementsByTagName("durak-app")[0].shadowRoot.getElementById("handView").children[0].children;
@@ -468,11 +463,11 @@ function undo() {
 function createCard(id, cardSrcName) {
     let cardElement = document.createElement('card-element');
     cardElement.id = id;
-    if (activePlayer === playerName) {
+    if (activePlayer === clientName) {
         cardElement.draggable = "true";
     }
     cardElement.src = "/assets/images/" + cardSrcName;
-    if (activePlayer === playerName) {
+    if (activePlayer === clientName) {
         cardElement.addEventListener('dragstart', function (ev) {
             ev.dataTransfer.setData("text", ev.target.id);
         });
@@ -541,6 +536,7 @@ class DurakApp extends LitElement {
             }
             
             #attackCards {
+                margin-top: 20px;
                 margin-left: 10.8%;
                 width: 78%;
                 min-height: 168.667px;
@@ -559,7 +555,7 @@ class DurakApp extends LitElement {
             }
             
             #blockingCards {
-                margin-top: -125px;
+                margin-top: -115px;
             }
             
             #handViewContainer {
@@ -568,68 +564,85 @@ class DurakApp extends LitElement {
             
             #handView {
                 margin-top: 35px;
-                min-width: 750px;
+                min-width: 785px;
             }
             
             #trumpCardBox {
                 text-align: right;
-                margin-right: 21px;
+                margin-right: 25px;
             }
             
             #okayButton {
                 margin-left: 13px;
                 margin-top: 25px;
+                font-size: 15px;
             }
             
             #undoButton {
                 margin-left: 12px;
                 margin-top: 30px;
+                font-size: 15px;
+            }
+            
+            #buttonRight {
+                margin-top: 85px;
+                font-size: 15px;
             }
             
             #takeButton {
                 margin-left: 10px;
                 margin-top: 30px;
+                font-size: 15px;
             }
             
             #leftButtonsContainer {
                 margin-bottom: 30px;
+                float: left;
+                margin-right: 30px;
+                margin-top: -40px;
             }
             
             #deckInfo {
                 text-align: center;
                 color: white;
+                font-size: 16px;
                 padding-top: 15px;
                 margin-bottom: 0;
-                font-weight: bold;
             }
             
             #gameInfo {
                 left: 15px;
                 text-align: left;
                 color: white;
+                font-size: 16px;
                 font-weight: bold;
+            }
+            
+            #deckInfo {
+                font-weight: bold;
+                font-size: 16px;
             }
             
             #trumpCardLabel {
                 text-align: right;
                 color: white;
+                font-size: 16px;
                 padding-right: 32px;
-                padding-top: 15px;
                 margin-bottom: 0;
             }
             
             #poopImg {
-                width: 40px;
+                width: 35px;
                 margin-left: 15px;
             }
             
             #thumpUpImg {
-                width: 30px;
+                width: 25px;
                 margin-left: 15px;
             }
             
             #undoArrowImg {
-                width: 30px;
+                width: 25px;
                 margin-left: 15px;
             }`
         ];
@@ -641,17 +654,13 @@ class DurakApp extends LitElement {
         <notification-toast id="toast"></notification-toast>
 
         <div class="row">
-            <div class="col"></div>
-            <div class="col">
+            <div class="col-xs-12">
                 <p id="deckInfo">Cards in Deck:</p>
-            </div>
-            <div class="col">
-                <p id="trumpCardLabel"><b>Trump Card:</b></p>
             </div>
         </div>
 
         <div class="row">
-            <div class="col">
+            <div class="col-xs-6">
                 <div id="gameInfo">
                     <p id="playerName">Your name:</p>
                     <p id="activePlayer">Active:</p>
@@ -661,8 +670,10 @@ class DurakApp extends LitElement {
 
                 </div>
             </div>
-            <div class="col"></div>
-            <div class="col" id="trumpCardBox">
+            <div class="col-xs-6">
+                <p id="trumpCardLabel"><b>Trump Card:</b></p>
+                <div id="trumpCardBox">
+                </div>
             </div>
         </div>
 
@@ -690,36 +701,38 @@ class DurakApp extends LitElement {
 
         <div class="row" id="handViewContainer">
             <div class="col-md-auto">
+                <div>
                 <div id="leftButtonsContainer">
                     <div>
-                        <button id="okayButton" class="btn btn-dark" type="button">
+                        <button id="okayButton" class="btn btn-primary" type="button">
                             <b>OKAY</b>
                             <img id="thumpUpImg" src="assets/images/thump_up.png">
                         </button>
                     </div>
                     <div>
-                        <button id="takeButton" class="btn btn-dark">
+                        <button id="takeButton" class="btn btn-primary">
                             <b>TAKE</b>
                             <img id="poopImg" src="assets/images/poop.png">
                         </button>
                     </div>
                     <div>
-                        <button id="undoButton" class="btn btn-dark" type="button">
+                        <button id="undoButton" class="btn btn-primary" type="button">
                             <b>UNDO</b>
                             <img id="undoArrowImg" src="assets/images/undo_arrow.png">
                         </button>
                     </div>
                 </div>
-            </div>
-            <div id="handView" class="col-md-5">
-                <div class="scrollmenu">
+
+                <div id="handView">
+                    <div class="scrollmenu">
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        `;
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    `;
     }
 }
 

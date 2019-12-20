@@ -13,7 +13,7 @@ import de.htwg.se.durak.util.customExceptions._
 import scala.util.Random
 
 case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: CardInterface, currentTurn: TurnInterface,
-                active: PlayerInterface, winners: List[PlayerInterface]) extends GameInterface {
+  active: PlayerInterface, winners: List[PlayerInterface]) extends GameInterface {
 
   def this(players: List[PlayerInterface], deck: DeckInterface) = this(players, deck, deck.cards.last,
     new Turn(players.head, players.head, players.head), players.head, Nil)
@@ -77,12 +77,14 @@ case class Game(players: List[PlayerInterface], deck: DeckInterface, trump: Card
   def closeTurn(success: Boolean): (TurnInterface, DeckInterface) = {
     val newDeck = distributeCards(currentTurn.getPlayers)
     if (success) {
-      (new Turn(currentTurn.victim,
+      (new Turn(
+        currentTurn.victim,
         currentTurn.neighbour,
         getNeighbour(currentTurn.neighbour)),
         newDeck)
     } else {
-      (new Turn(currentTurn.neighbour,
+      (new Turn(
+        currentTurn.neighbour,
         getNeighbour(currentTurn.neighbour),
         getNeighbour(getNeighbour(currentTurn.neighbour))),
         newDeck)

@@ -1,4 +1,16 @@
-@()
+@import de.htwg.se.durak.util.cardConverter._
+@import de.htwg.se.durak.model.cardComponent.CardInterface
+@import play.api.i18n.Messages
+@import play.api.mvc.RequestHeader
+@import org.webjars.play.WebJarsUtil
+@import controllers.AssetsFinder
+@import play.api.data._
+@import forms.TotpSetupForm.Data
+@import com.mohiva.play.silhouette.impl.providers.GoogleTotpCredentials
+@import com.mohiva.play.silhouette.impl.providers.GoogleTotpInfo
+
+@(controller: de.htwg.se.durak.controller.controllerComponent.ControllerInterface, user: models.User, totpInfoOpt: Option[GoogleTotpInfo], totpDataOpt: Option[(Form[Data], GoogleTotpCredentials)] = None)(implicit request: RequestHeader,
+        messages: Messages, webJarsUtil: WebJarsUtil, assets: AssetsFinder)
 
 @main("Durak Vue") {
     <div id="gameContainer" class="container-fluid">
@@ -6,6 +18,6 @@
     </div>
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/vue-toasted"></script>
-    <script src="@routes.Assets.versioned("javascripts/durakVue.js")" ></script>
-    <link rel="stylesheet" type="text/css" href='@routes.Assets.versioned("stylesheets/durak.css")' />
+    <script src="@assets.path("javascripts/durakVue.js")" ></script>
+    <link rel="stylesheet" type="text/css" href='@assets.path("stylesheets/durak.css")' />
 }

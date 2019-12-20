@@ -1,4 +1,4 @@
-var playerName = undefined;
+var clientName = undefined;
 var playerRole = undefined;
 
 var activePlayer = undefined;
@@ -11,83 +11,86 @@ var trumpCard = undefined;
 var websocket = undefined;
 
 Vue.component('durak-app', {
-    template:`
-        <div>
-            <div class="row">
-                <div class="col"></div>
-                <div class="col">
-                    <p id="deckInfo">Cards in Deck:</p>
-                </div>
-                <div class="col">
-                    <p id="trumpCardLabel"><b>Trump Card:</b></p>
+    template: `
+        <div id="gameContainer" class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <p id="deckInfo">Cards in Deck: @deckSize</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-6">
+                <div id="gameInfo">
+                    <p id="playerName">Your name:</p>
+                    <p id="activePlayer">Active: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@activePlayer</p>
+                    <p id="attackingPlayer">Attacker: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@attacker</p>
+                    <p id="defendingPlayer">Victim: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@defender</p>
+                    <p id="neighbor">Neighbor: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@neighbor</p>
+
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <div id="gameInfo">
-                        <p id="playerName">Your name:</p>
-                        <p id="activePlayer">Active:</p>
-                        <p id="attackingPlayer">Attacker:</p>
-                        <p id="defendingPlayer">Victim:</p>
-                        <p id="neighbor">Neighbor:</p>
-                    </div>
-                </div>
-                    <div class="col">
-                    </div>
-                    <div class="col" id="trumpCardBox">
-                    </div>
-            </div>
-
-            <div class="row">
-                <div class="col">
-                    <div id="attackCards" ondrop="handleHandCardsOnDrop(event)" ondragover="enableDrop(event)" class="scrollmenu" >
-                    </div>
+            <div class="col-xs-6">
+                <p id="trumpCardLabel"><b>Trump Card:</b></p>
+                <div id="trumpCardBox">
                 </div>
             </div>
+        </div>
 
-            <div class="row">
-                <div class="col">
-                    <div class="scrollmenu" id="defendedCardsContainer">
-                        <div>
-                            <div id="blockedCards">
-                            </div>
-
-                            <div id="blockingCards">
-                            </div>
-                        </div>
-                    </div>
+        <div class="row">
+            <div class="col">
+                <div id="attackCards" ondrop="handleHandCardsOnDrop(event)"  ondragover="enableDrop(event)" class="scrollmenu" >
                 </div>
             </div>
+        </div>
 
-            <div class="row" id="handViewContainer">
-                <div class="col-md-auto">
-                    <div id="leftButtonsContainer">
-                        <div>
-                            <button id="okayButton" class="btn btn-dark" type="button" onclick="playOk()">
-                                <b>OKAY</b>
-                                <img id="thumpUpImg" src="assets/images/thump_up.png"/>
-                            </button>
+        <div class="row">
+            <div class="col">
+                <div class="scrollmenu" id="defendedCardsContainer">
+                    <div>
+
+                        <div id="blockedCards">
                         </div>
-                        <div>
-                            <button id="takeButton" onclick="takeCards()" class="btn btn-dark">
-                                <b>TAKE</b>
-                                <img id="poopImg" src="assets/images/poop.png"/>
-                            </button>
+
+                        <div id="blockingCards">
                         </div>
-                        <div>
-                            <button id="undoButton" class="btn btn-dark" onclick="undo()" type="button">
-                                <b>UNDO</b>
-                                <img id="undoArrowImg" src="assets/images/undo_arrow.png"/>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div id="handView" ondrop="handleHandCardsOnDrop(event)" class="col-md-5">
-                    <div id="hand-cards" class="scrollmenu">
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="row" id="handViewContainer">
+            <div class="col-md-auto">
+                <div>
+                <div id="leftButtonsContainer">
+                    <div>
+                        <button id="okayButton" class="btn btn-primary" type="button" onclick="playOk()">
+                            <b>OKAY</b>
+                            <img id="thumpUpImg" src="assets/images/thump_up.png">
+                        </button>
+                    </div>
+                    <div>
+                        <button id="takeButton" onclick="takeCards()" class="btn btn-primary">
+                            <b>TAKE</b>
+                            <img id="poopImg" src="assets/images/poop.png">
+                        </button>
+                    </div>
+                    <div>
+                        <button id="undoButton" class="btn btn-primary" onclick="undo()" type="button">
+                            <b>UNDO</b>
+                            <img id="undoArrowImg" src="assets/images/undo_arrow.png">
+                        </button>
+                    </div>
+                </div>
+
+                <div id="handView" ondrop="handleHandCardsOnDrop(event)">
+                    <div class="scrollmenu">
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
     `
 });
 
@@ -97,11 +100,11 @@ $(function () {
 });
 
 function connectWebSocket() {
-    websocket = new WebSocket("ws://localhost:9000/websocket");
+    websocket = new WebSocket("ws://localhost:9000/durakWebsocket");
     websocket.setTimeout;
 
     websocket.onopen = function (event) {
-        websocket.send("test");
+        websocket.send("Connedted");
     };
 
     websocket.onclose = function () {
@@ -110,36 +113,26 @@ function connectWebSocket() {
 
     websocket.onerror = function (error) {
         console.log('Error in Websocket Occured: ' + error);
-        connectWebSocket();
     };
 
     websocket.onmessage = function (event) {
         if (typeof event.data === "string") {
             let json = JSON.parse(event.data);
 
-            console.log(json);
-
             let app = new Vue({
                 el: "#gameContainer"
             });
 
-            $.when($.ajax({
+            $.ajax({
                 method: "GET",
-                url: "/playerName",
+                url: "/clientName",
                 dataType: "html",
 
                 success: function (data) {
-                    playerName = data;
-                    let playerNameVue = new Vue({
-                        el: "#playerName",
-                    });
-
-                    playerNameVue.$el.innerHTML = "Your name:  \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + data;
+                    clientName = data;
                 }
-            })).done(function () {
-                activePlayer = json.game.active.player.name;
-
-                $.when($.ajax({
+            }).then(function () {
+                return $.ajax({
                     method: "GET",
                     url: "/playerRole",
                     dataType: "html",
@@ -147,9 +140,15 @@ function connectWebSocket() {
                     success: function (data) {
                         playerRole = data;
                     }
-                })).done(function () {
-                    updateComponents();
+                })
+            }).done(function () {
+                let playerNameVue = new Vue({
+                    el: "#playerName",
                 });
+
+                playerNameVue.$el.innerHTML = "Your name:  \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + clientName;
+
+                activePlayer = json.game.active.player.name;
 
                 let activePlayerVue = new Vue({
                     el: "#activePlayer",
@@ -210,10 +209,10 @@ function connectWebSocket() {
                 for (i = 0; i < playersAsJson.length; i++) {
                     let player = playersAsJson[i].player;
 
-                    if (player.name === playerName) {
+                    if (player.name === clientName) {
 
                         var handCardsElementVue = new Vue({
-                            el: "#hand-cards"
+                            el: "#handView"
                         });
 
                         handCardsElementVue.$el.innerHTML = "";
@@ -275,6 +274,8 @@ function connectWebSocket() {
                     let blockingCard = createCard("blockingCard" + blockingCardsSize, blockingCardSrcName);
                     blockingCardsElementVue.$el.append(blockingCard);
                 });
+
+                updateComponents();
             });
         }
     }
@@ -282,7 +283,7 @@ function connectWebSocket() {
 
 function updateComponents() {
     if (playerRole === "defender") {
-        if (activePlayer === playerName) {
+        if (activePlayer === clientName) {
             enableCardDragAndDrop();
             enableUndoButton();
             enableTakeButton();
@@ -304,7 +305,7 @@ function updateComponents() {
 
         disableOkButton();
     } else {
-        if (activePlayer === playerName) {
+        if (activePlayer === clientName) {
             enableCardDragAndDrop();
             enableUndoButton();
             enableTakeButton();
@@ -604,11 +605,11 @@ function createCard(id, cardSrcName) {
     let cardElement = document.createElement('img');
     cardElement.id = id;
     cardElement.className = "cardImg";
-    if (activePlayer === playerName) {
+    if (activePlayer === clientName) {
         cardElement.draggable = "true";
     }
     cardElement.setAttribute("src", "/assets/images/" + cardSrcName);
-    if (activePlayer === playerName) {
+    if (activePlayer === clientName) {
         cardElement.addEventListener('dragstart', function (ev) {
             ev.dataTransfer.setData("text", ev.target.id);
         });

@@ -2,9 +2,7 @@ package de.htwg.se.durak.controller.controllerComponent
 
 object GameStatus extends Enumeration {
   type GameStatus = Value
-  val IDLE, NEW, NEWPLAYER, PLAYERALREADYPRESENT, RESETPLAYERS, MOREPLAYERSNEEDED, ILLEGALTURN, MISSINGBLOCKINGCARD,
-  VICTIMHASNOTENOUGHTCARDS, CARDLAYED, LAYCARDFIRST, TAKE, NOCARDSTOTAKE, OK, UNDO, REDO, LOADED, COULDNOTLOAD, SAVED,
-  OVER, EXIT = Value
+  val IDLE, NEW, NEWPLAYER, PLAYERALREADYPRESENT, RESETPLAYERS, MOREPLAYERSNEEDED, ILLEGALTURN, MISSINGBLOCKINGCARD, VICTIMHASNOTENOUGHTCARDS, CARDLAYED, LAYCARDFIRST, TAKE, NOCARDSTOTAKE, OK, UNDO, REDO, LOADED, COULDNOTLOAD, SAVED, OVER, EXIT = Value
 
   val map: Map[GameStatus, String] = Map[GameStatus, String](
     IDLE -> "",
@@ -27,8 +25,7 @@ object GameStatus extends Enumeration {
     COULDNOTLOAD -> "The requested file could not be loaded.",
     SAVED -> "The game was saved.",
     OVER -> "The game is over.",
-    EXIT -> "Exit the game."
-  )
+    EXIT -> "Exit the game.")
 
   def message(gameStatus: GameStatus): String = {
     map(gameStatus)

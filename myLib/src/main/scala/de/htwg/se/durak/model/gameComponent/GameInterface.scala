@@ -5,7 +5,6 @@ import de.htwg.se.durak.model.deckComponent.DeckInterface
 import de.htwg.se.durak.model.playerComponent.PlayerInterface
 import de.htwg.se.durak.model.turnComponent.TurnInterface
 
-
 trait GameInterface {
   val players: List[PlayerInterface]
   val deck: DeckInterface

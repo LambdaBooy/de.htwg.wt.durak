@@ -3,7 +3,7 @@ package de.htwg.se.durak.model.cardComponent.cardBaseImpl
 import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.cardComponent.cardBaseImpl.CardColor.CardColor
 import de.htwg.se.durak.model.cardComponent.cardBaseImpl.CardValue.CardValue
-import play.api.libs.json.{JsObject, JsString, Json}
+import play.api.libs.json.{ JsObject, JsString, Json }
 
 import scala.xml.Node
 
@@ -14,10 +14,10 @@ case class Card(color: CardColor, value: CardValue) extends CardInterface {
   def toXml: Node = {
     <card>
       <color>
-        {color}
+        { color }
       </color>
       <value>
-        {value}
+        { value }
       </value>
     </card>
   }
@@ -26,8 +26,6 @@ case class Card(color: CardColor, value: CardValue) extends CardInterface {
     Json.obj(
       "card" -> Json.obj(
         "color" -> JsString(color.toString),
-        "value" -> JsString(value.toString)
-      )
-    )
+        "value" -> JsString(value.toString)))
   }
 }

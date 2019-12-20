@@ -2,7 +2,7 @@ package de.htwg.se.durak.model.playerComponent.playerBaseImpl
 
 import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.playerComponent.PlayerInterface
-import play.api.libs.json.{JsObject, JsString, Json}
+import play.api.libs.json.{ JsObject, JsString, Json }
 
 import scala.xml.Node
 
@@ -22,7 +22,7 @@ case class Player(name: String, var handCards: List[CardInterface]) extends Play
   def nameToXml: Node = {
     <player>
       <name>
-        {name}
+        { name }
       </name>
     </player>
   }
@@ -30,10 +30,10 @@ case class Player(name: String, var handCards: List[CardInterface]) extends Play
   def toXml: Node = {
     <player>
       <name>
-        {name}
+        { name }
       </name>
       <handCards>
-        {handCards.map(c => c.toXml)}
+        { handCards.map(c => c.toXml) }
       </handCards>
     </player>
   }
@@ -41,17 +41,13 @@ case class Player(name: String, var handCards: List[CardInterface]) extends Play
   def nameToJson: JsObject = {
     Json.obj(
       "player" -> Json.obj(
-        "name" -> JsString(name)
-      )
-    )
+        "name" -> JsString(name)))
   }
 
   def toJson: JsObject = {
     Json.obj(
       "player" -> Json.obj(
         "name" -> JsString(name),
-        "handCards" -> handCards.map(c => c.toJson)
-      )
-    )
+        "handCards" -> handCards.map(c => c.toJson)))
   }
 }

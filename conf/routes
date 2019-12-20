@@ -1,43 +1,48 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
-# https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-GET     /                           controllers.DurakController.durak
+GET     /durak                               controllers.DurakController.durak
+GET     /about                               controllers.DurakController.about
+GET     /addPlayer/:name                     controllers.DurakController.addPlayer(name: String)
+GET     /newGame                             controllers.MainMenuDurakController.newGame
+GET     /play/:input                         controllers.DurakController.playCard(input: String)
+GET     /throwIn/:input                      controllers.DurakController.throwCardIn(input: String)
+GET     /ok                                  controllers.DurakController.ok
+GET     /take                                controllers.DurakController.take
+GET     /undo                                controllers.DurakController.undo
+GET     /durakWebsocket                      controllers.DurakController.socket
+GET     /mainMenuDurakWebsocket              controllers.MainMenuDurakController.socket
+GET     /playerRole                          controllers.DurakController.getPlayerRole
+GET     /players                             controllers.DurakController.getPlayers
+GET     /clientName                          controllers.DurakController.getClientName
+GET     /clientId                            controllers.DurakController.getClientId
+GET     /durakPolymer                        controllers.DurakController.durakPolymer
+GET     /durakVue                            controllers.DurakController.durakVue
 
-GET     /about                      controllers.DurakController.about
-
-GET     /addPlayer/:name            controllers.DurakController.addPlayer(name: String)
-
-GET     /newGame                    controllers.DurakController.newGame
-
-GET     /play/:input                controllers.DurakController.playCard(input: String)
-
-GET     /throwIn/:input             controllers.DurakController.throwCardIn(input: String)
-
-GET     /ok                         controllers.DurakController.ok
-
-GET     /take                       controllers.DurakController.take
-
-GET     /undo                       controllers.DurakController.undo
-
-GET     /websocket                  controllers.DurakController.socket(playerName: Option[String])
-
-GET     /json                       controllers.DurakController.gameToJson
-
-GET     /playerName                 controllers.DurakController.getPlayerName
-
-GET     /playerRole                 controllers.DurakController.getPlayerRole
-
-GET     /players                    controllers.DurakController.getPlayers
-
-GET     /check                      controllers.DurakController.check
-
-GET     /gameStatus                 controllers.DurakController.gameStatus
-
-GET     /durakPolymer               controllers.DurakController.durakPolymer
-
-GET     /durakVue                   controllers.DurakController.durakVue
+GET         /                                controllers.ApplicationController.index
+GET         /signOut                         controllers.ApplicationController.signOut
+GET         /authenticate/:provider          controllers.SocialAuthController.authenticate(provider)
+GET         /signUp                          controllers.SignUpController.view
+POST        /signUp                          controllers.SignUpController.submit
+GET         /signIn                          controllers.SignInController.view
+POST        /signIn                          controllers.SignInController.submit
+GET         /totp                            controllers.TotpController.view(userId: java.util.UUID, sharedKey: String, rememberMe: Boolean)
+GET         /enableTotp                      controllers.TotpController.enableTotp
+GET         /disableTotp                     controllers.TotpController.disableTotp
+POST        /totpSubmit                      controllers.TotpController.submit
+POST        /enableTotpSubmit                controllers.TotpController.enableTotpSubmit
+GET         /totpRecovery                    controllers.TotpRecoveryController.view(userID: java.util.UUID, sharedKey: String, rememberMe: Boolean)
+POST        /totpRecoverySubmit              controllers.TotpRecoveryController.submit
+GET         /password/forgot                 controllers.ForgotPasswordController.view
+POST        /password/forgot                 controllers.ForgotPasswordController.submit
+GET         /password/reset/:token           controllers.ResetPasswordController.view(token: java.util.UUID)
+POST        /password/reset/:token           controllers.ResetPasswordController.submit(token: java.util.UUID)
+GET         /password/change                 controllers.ChangePasswordController.view
+POST        /password/change                 controllers.ChangePasswordController.submit
+GET         /account/email/:email            controllers.ActivateAccountController.send(email: String)
+GET         /account/activate/:token         controllers.ActivateAccountController.activate(token: java.util.UUID)
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                    controllers.Assets.versioned(file)
+->          /webjars                         webjars.Routes

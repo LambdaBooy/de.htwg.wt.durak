@@ -1,6 +1,6 @@
 package de.htwg.se.durak.model.fileIOComponent.fileIOJsonImpl
 
-import java.io.{File, PrintWriter}
+import java.io.{ File, PrintWriter }
 
 import de.htwg.se.durak.model.cardComponent.CardInterface
 import de.htwg.se.durak.model.deckComponent.DeckInterface
@@ -10,11 +10,11 @@ import de.htwg.se.durak.model.gameComponent.GameInterface
 import de.htwg.se.durak.model.gameComponent.gameBaseImpl.Game
 import de.htwg.se.durak.model.playerComponent.PlayerInterface
 import de.htwg.se.durak.model.playerComponent.playerBaseImpl.Player
-import de.htwg.se.durak.model.turnComponent.{TurnInterface, turnBaseImpl}
+import de.htwg.se.durak.model.turnComponent.{ TurnInterface, turnBaseImpl }
 import de.htwg.se.durak.util.cardConverter.CardStringConverter
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{ JsObject, JsValue, Json }
 
-import scala.io.{BufferedSource, Source}
+import scala.io.{ BufferedSource, Source }
 
 class FileIO extends FileIOInterface {
   override def load(fileName: String): GameInterface = {
@@ -150,8 +150,6 @@ class FileIO extends FileIOInterface {
         "trump" -> game.trump.toJson,
         "currentTurn" -> game.currentTurn.toJson,
         "active" -> game.active.nameToJson,
-        "winners" -> game.winners.map(p => p.nameToJson)
-      )
-    )
+        "winners" -> game.winners.map(p => p.nameToJson)))
   }
 }

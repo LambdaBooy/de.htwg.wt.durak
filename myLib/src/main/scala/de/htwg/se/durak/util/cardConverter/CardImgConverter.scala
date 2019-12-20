@@ -1,7 +1,7 @@
 package de.htwg.se.durak.util.cardConverter
 
 import de.htwg.se.durak.model.cardComponent.CardInterface
-import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{CardColor, CardValue}
+import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{ CardColor, CardValue }
 
 import scala.xml.Elem
 

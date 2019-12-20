@@ -1,24 +1,5 @@
-#addPlayerContainer {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-#addPlayerLabel {
-    color: white;
-}
-
 #text {
     background-color: white;
-}
-
-#playerNameLabel {
-    margin-top: 20px;
-    color: white;
-    font-size: larger;
-    margin-left: 26%;
 }
 
 #gameRulesContainer {
@@ -29,12 +10,6 @@
     align-items: center;
 }
 
-#submitButton {
-    padding-left: 10px;
-    font-size: large;
-    height: 38px;
-}
-
 #startGameContainer {
     margin-top: 20px;
     display: flex;
@@ -43,21 +18,9 @@
     align-items: center;
 }
 
-#infoTextContainer {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-#infoText {
-    color: white;
-    font-size: x-large;
-}
 
 #connectedPlayersContainer {
-    font-size: large;
+    font-size: x-large;
     font-weight: bold;
     color: white;
     display: flex;
@@ -65,6 +28,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+#connectedPlayersParagraph {
+    font-size: medium;
 }
 
 body {

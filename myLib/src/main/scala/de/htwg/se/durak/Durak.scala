@@ -1,6 +1,6 @@
 package de.htwg.se.durak
 
-import com.google.inject.{Guice, Injector}
+import com.google.inject.{ Guice, Injector }
 import de.htwg.se.durak.controller.controllerComponent.ControllerInterface
 import de.htwg.se.durak.aview.Tui
 

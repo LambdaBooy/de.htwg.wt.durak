@@ -1,15 +1,15 @@
 package de.htwg.se.durak.util.cardConverter
 
 import de.htwg.se.durak.model.cardComponent.cardBaseImpl.CardColor.CardColor
-import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{Card, CardColor, CardValue}
+import de.htwg.se.durak.model.cardComponent.cardBaseImpl.{ Card, CardColor, CardValue }
 import de.htwg.se.durak.model.cardComponent.cardBaseImpl.CardValue.CardValue
 
 object CardStringConverter {
   def parseColorString(input: String): CardColor = input match {
-    case "Herz" | "herz"  => CardColor.Herz
-    case "Karo" | "karo"  => CardColor.Karo
-    case "Kreuz"| "kreuz" => CardColor.Kreuz
-    case "Pik"  | "pik"   => CardColor.Pik
+    case "Herz" | "herz" => CardColor.Herz
+    case "Karo" | "karo" => CardColor.Karo
+    case "Kreuz" | "kreuz" => CardColor.Kreuz
+    case "Pik" | "pik" => CardColor.Pik
   }
 
   def parseValueString(input: String): CardValue = input match {
@@ -22,10 +22,10 @@ object CardStringConverter {
     case "8" | "Acht" | "acht" => CardValue.Acht
     case "9" | "Neun" | "neun" => CardValue.Neun
     case "10" | "Zehn" | "zehn" => CardValue.Zehn
-    case "B" | "b" | "bube" | "Bube"   => CardValue.Bube
-    case "D" | "d" | "dame" | "Dame"   => CardValue.Dame
+    case "B" | "b" | "bube" | "Bube" => CardValue.Bube
+    case "D" | "d" | "dame" | "Dame" => CardValue.Dame
     case "K" | "k" | "könig" | "König" => CardValue.König
-    case "A" | "a" | "ass" | "Ass"     => CardValue.Ass
+    case "A" | "a" | "ass" | "Ass" => CardValue.Ass
   }
 
   def parseColorObject(color: CardColor): String = color match {
@@ -37,7 +37,7 @@ object CardStringConverter {
 
   def parseCardObjectToCardString(card: Card): String = parseColorObject(card.color) + " " + parseValueObject(card.value)
 
-  def parseValueObject(value: CardValue) : String = value match {
+  def parseValueObject(value: CardValue): String = value match {
     case CardValue.Zwei => "2"
     case CardValue.Drei => "3"
     case CardValue.Vier => "4"
@@ -50,7 +50,7 @@ object CardStringConverter {
     case CardValue.Bube => "B"
     case CardValue.Dame => "D"
     case CardValue.König => "K"
-    case CardValue.Ass =>"A"
+    case CardValue.Ass => "A"
   }
 
   def parseCardStringToCardObject(cardString: String): Card = {

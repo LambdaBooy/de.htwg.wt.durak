@@ -1,8 +1,21 @@
-@()
-    @main("Durak Polymer") {
-        <script src="@routes.Assets.versioned("bower_components/webcomponentsjs/webcomponents-lite.js")"></script>
-        <script type="module" src="assets/src/durak-app/durak-app.js"></script>
-        <link rel="import" href="@routes.Assets.versioned("bower_components/notification-toast/notification-toast.html")">
+@import de.htwg.se.durak.util.cardConverter._
+@import de.htwg.se.durak.model.cardComponent.CardInterface
+@import play.api.i18n.Messages
+@import play.api.mvc.RequestHeader
+@import org.webjars.play.WebJarsUtil
+@import controllers.AssetsFinder
+@import play.api.data._
+@import forms.TotpSetupForm.Data
+@import com.mohiva.play.silhouette.impl.providers.GoogleTotpCredentials
+@import com.mohiva.play.silhouette.impl.providers.GoogleTotpInfo
 
-        <durak-app></durak-app>
-    }
+@(controller: de.htwg.se.durak.controller.controllerComponent.ControllerInterface, user: models.User, totpInfoOpt: Option[GoogleTotpInfo], totpDataOpt: Option[(Form[Data], GoogleTotpCredentials)] = None)(implicit request: RequestHeader,
+        messages: Messages, webJarsUtil: WebJarsUtil, assets: AssetsFinder)
+
+@main("Durak Polymer") {
+    <script src="@assets.path("bower_components/webcomponentsjs/webcomponents-lite.js")"></script>
+    <script type="module" src="assets/durak-app/durak-app.js"></script>
+    <script type="module" src="assets/durak-app/card-element.js"></script>
+    <link rel="import" href="@assets.path("bower_components/notification-toast/notification-toast.html")">
+    <durak-app></durak-app>
+}
