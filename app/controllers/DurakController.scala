@@ -174,6 +174,10 @@ class DurakController @Inject() ()(
     }
   }
 
+  def offline = silhouette.UnsecuredAction.async { implicit request: Request[AnyContent] =>
+    Future.successful(Ok(views.html.offlinePageDurak()))
+  }
+
   object MyWebSocketActor {
     def props(user: User)(out: ActorRef) = Props(new MyWebSocketActor(user, out))
   }
