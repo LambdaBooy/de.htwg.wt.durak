@@ -1,0 +1,24 @@
+@import controllers.AssetsFinder
+
+@import play.api.i18n.Messages
+@import play.api.mvc.RequestHeader
+@import org.webjars.play.WebJarsUtil
+
+@()(implicit request: RequestHeader, messages: Messages, webJarsUtil: WebJarsUtil, assets: AssetsFinder)
+
+<!doctype html>
+<style>
+        body { text-align: center; padding: 150px; background-color: white}
+        h1 { font-size: 50px; }
+        body { font: 20px Helvetica, sans-serif; color: black; }
+        div { display: block; text-align: left; width: 650px; margin: 0 auto; }
+        a { color: #dc8100; text-decoration: none; }
+        a:hover { color: #333; text-decoration: none; }
+</style>
+<title>Site Maintenance</title>
+
+<div>
+    <h1>404 - Page not found</h1>
+    <h2>Oh no ....</h2>
+    <p>There could be a problem with your internet connection or our server is temporary unavailable!</p>
+</div>
