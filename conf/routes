@@ -19,6 +19,10 @@ GET     /clientName                          controllers.DurakController.getClie
 GET     /clientId                            controllers.DurakController.getClientId
 GET     /durakPolymer                        controllers.DurakController.durakPolymer
 GET     /durakVue                            controllers.DurakController.durakVue
+GET     /serviceWorker.js                    controllers.Assets.at(path="/public", file="javascripts/serviceWorker.js")
+GET     /manifest.json                       controllers.Assets.at(path="/public", file="manifest.json")
+GET     /registerServiceWorker.js            controllers.Assets.at(path="/public", file="javascripts/registerServiceWorker.js")
+GET     /offline.html                        controllers.DurakController.offline
 
 GET         /                                controllers.ApplicationController.index
 GET         /signOut                         controllers.ApplicationController.signOut
