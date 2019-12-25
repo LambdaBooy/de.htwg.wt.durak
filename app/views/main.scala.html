@@ -14,12 +14,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" type="image/png" href="@assets.path("images/favicon.png")">
         <title>@title</title>
-        <link href="//fonts.googleapis.com/css?family=Roboto|Montserrat:400,700|Open+Sans:400,300,600" rel="stylesheet">
-        <link href="//cdnjs.cloudflare.com/ajax/libs/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet">
+        <link href="//fonts.googleapis.com/css?family=Roboto|Montserrat:400,700|Open+Sans:400,300,600" rel="stylesheet" type="text/css">
+        <link href="//cdnjs.cloudflare.com/ajax/libs/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet" type="text/css">
         @webJarsUtil.locate("bootstrap.min.css").css()
         @webJarsUtil.locate("bootstrap-theme.min.css").css()
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="@assets.path("stylesheets/main.css")">
+        <link rel="manifest" type="application/manifest+json" href="@assets.path("manifest.json")" crossorigin="use-credentials">
+        <link rel="stylesheet" type="text/css" href="@assets.path("stylesheets/main.css")">
             <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
             <!--[if lt IE 9]>
             <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -85,5 +86,6 @@
         @webJarsUtil.locate("bootstrap.min.js").script()
         <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.2.0/zxcvbn.js"></script>
         <script src="@assets.path("javascripts/zxcvbnShim.js")"></script>
+        <script type="text/javascript" src="@assets.path("javascripts/registerServiceWorker.js")"></script>
     </body>
 </html>
