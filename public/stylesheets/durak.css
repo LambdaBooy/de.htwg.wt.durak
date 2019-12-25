@@ -29,7 +29,7 @@ div.scrollmenu a:hover {
     margin-left: 10.8%;
     width: 78%;
     min-height: 168.667px;
-    border:2px solid #d4af37;
+    border: 2px solid #d4af37;
 }
 
 #defendedCardsContainer {
@@ -240,5 +240,42 @@ body {
 @media (max-width: 1561px) {
     .card-element {
         width: 80px;
+    }
+}
+
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : portrait) {
+    header {
+        width: 768px;
+    }
+
+    #handView {
+        min-width: 650px;
+        max-width: 650px;
+    }
+
+    article {
+        width: auto;
+    }
+}
+
+@media only screen
+and (min-device-width : 768px)
+and (max-device-width : 1024px)
+and (orientation : landscape) {
+    .cardImg {
+        width: 80px;
+    }
+    #attackCards {
+        min-height: 130px;
+    }
+    #blockingCards {
+        margin-top: -105px;
+    }
+    #defendedCardsContainer {
+        min-height: 146px;
+        margin-top: 10px;
     }
 }
