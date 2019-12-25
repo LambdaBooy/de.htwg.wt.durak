@@ -203,6 +203,9 @@ function updateComponents() {
 function handleHandCardsOnDrop(ev) {
     ev.preventDefault();
     let draggedCard = ev.dataTransfer.getData("text");
+    if (document.getElementById(draggedCard) === null) {
+        return
+    }
     let draggedCardValue = getCardValueFromSrc(document.getElementById(draggedCard).src);
 
     if (activePlayer === attacker) {
@@ -436,7 +439,7 @@ function createCard(id, cardSrcName) {
     if (activePlayer === playerName) {
         cardElement.addEventListener('dragstart', function (ev) {
             ev.dataTransfer.setData("text", ev.target.id);
-        });
+        }, {passive: true});
     }
 
     return cardElement;
