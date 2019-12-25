@@ -1,0 +1,13 @@
+{
+  "name": "HTWG Durak",
+  "short_name": "Durak",
+  "scope": "/",
+  "start_url": "/signIn",
+  "display": "standalone",
+  "description": "HTWG Durak",
+  "icons": [{
+    "src": "images/durakIcon.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }]
+}
